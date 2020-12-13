@@ -20,14 +20,14 @@
             <label for="personTaxes"> Which tax would you like to calculate ?</label>
             <div id="personTaxes">
                 <button id="personIncBtn">Income Tax</button>
-                <button id="personPropBtn">Property Tax</button>
+                <button id="personVATBtn" class="btn">VAT</button>
             </div>
         </div>
         <div id="corporation">
             <label for="corpTaxes"> Which tax would you like to calculate ?</label>
             <div id="corpTaxes">
                 <button>Profit tax</button>
-                <button>Property Tax</button>
+                <button class="btn" id="corpVATBtn">VAT</button>
             </div>
         </div>
     </div>
@@ -69,6 +69,17 @@
 
             <button type="submit">Submit data</button>
         </form>
+    </div>
+    <div id="bothVAT">
+        <form id="VATform">
+            <div>
+                <label for="totVAT1">What was your total sales for the month(including sale of product and services, No VAT included) ?</label>
+                <input type="number" step="0.01" name="totVAT" id="totVAT1">
+            </div>
+     
+            <button type="submit">Submit data</button>
+        </form>
+
     </div>
 
 

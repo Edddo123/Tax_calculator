@@ -8,4 +8,6 @@ router.get('/', formController.getForm)
 
 router.put('/persnInc', formController.persnInc)
 
+router.put('/totalVAT', formController.totalVAT)
+
 module.exports = router

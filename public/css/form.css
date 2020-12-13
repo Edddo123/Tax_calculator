@@ -13,6 +13,10 @@
 #personIncome {
     display: none;
 }
+
+#bothVAT {
+    display: none;
+}
 .radio {
     margin-left: 1rem;
     display: inline-flex;
