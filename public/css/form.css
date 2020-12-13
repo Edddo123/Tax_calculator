@@ -1,0 +1,19 @@
+* {
+    background-color: bisque;
+}
+
+#person {
+    display: none;
+}
+
+#corporation {
+    display: none;
+}
+
+#personIncome {
+    display: none;
+}
+.radio {
+    margin-left: 1rem;
+    display: inline-flex;
+}

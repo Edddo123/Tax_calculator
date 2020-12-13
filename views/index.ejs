@@ -1,11 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/form.css">
 </head>
+
 <body>
-    <h1>Hey there</h1>
+    <div id="choice">
+    <label for="identity">Who are you?</label>
+    <div id="identity">
+        <button id="personBtn">Person</button>
+        <button id="corpBtn">Corporation</button>
+    </div>
+    
+        <div id="person">
+            <label for="personTaxes"> Which tax would you like to calculate ?</label>
+            <div id="personTaxes">
+                <button id="personIncBtn">Income Tax</button>
+                <button id="personPropBtn">Property Tax</button>
+            </div>
+        </div>
+        <div id="corporation">
+            <label for="corpTaxes"> Which tax would you like to calculate ?</label>
+            <div id="corpTaxes">
+                <button>Profit tax</button>
+                <button>Property Tax</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="personIncome">
+        <form id="form">
+            <div>
+                <label for="residence">Choose your Residence</label>
+                <select name="residence" id="residence">
+                    <option value="resident">Resident</option>
+                    <option value="non-resident">Non-resident</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label for="employment">Choose your employment status :</label>
+                <div id="employment" class="radio">
+                    <input type="radio" id="employed" name="employment" value="employed">
+                    <label for="male">employed</label><br>
+                    <input type="radio" id="self-employed" name="employment" value="self-employed">
+                    <label for="female">self-employed</label><br>
+                    <input type="radio" id="other" name="employment" value="other">
+                    <label for="other">Other</label>
+                </div>
+            </div>
+            <div>
+                <label for="totIncome">What was your total income for the month(on hand) ?</label>
+                <input type="number" step="0.01" name="totIncome" id="totIncome">
+            </div>
+            <div>
+                <label for="benefits">Do you have any special benefits ?</label>
+                <div id="benefits" class="radio">
+                    <input type="radio" id="yes" name="benefits" value="yes">
+                    <label for="male">Yes</label><br>
+                    <input type="radio" id="no" name="benefits" value="no">
+                    <label for="female">No</label><br>
+                </div>
+            </div>
+
+            <button type="submit">Submit data</button>
+        </form>
+    </div>
+
+
+
+    <script src="/js/form.js"></script>
 </body>
+
 </html>
