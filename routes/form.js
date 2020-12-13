@@ -10,4 +10,6 @@ router.put('/persnInc', formController.persnInc)
 
 router.put('/totalVAT', formController.totalVAT)
 
+router.post('/records', formController.postRecords)
+
 module.exports = router

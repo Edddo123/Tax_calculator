@@ -122,6 +122,7 @@ corpVATBtn.addEventListener('click', (e) => {
 
 submitVAT.addEventListener('submit', (e) => {
     let totalSales = document.getElementById('totVAT1').value
+    let taxType = "VAT"
     e.preventDefault()
     fetch('http://localhost:3000/totalVAT', {
         method: 'PUT',
@@ -129,7 +130,8 @@ submitVAT.addEventListener('submit', (e) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            totalSales
+            totalSales,
+            taxType
         })
 
     })
@@ -152,6 +154,15 @@ submitVAT.addEventListener('submit', (e) => {
         <p>Your VAT payable is ${data.totalVAT}</p>
         
         `;
+        let newForm = document.createElement('form')
+        newForm.innerHTML = `
+        <input type="hidden" name="taxType" value="${data.taxType}">
+        <input type="hidden" name="VATAmount" value="${data.totalVAT}">
+        <button type="submit">Add to record</button>`
+        newForm.setAttribute('action', 'http://localhost:3000/records')
+        newForm.setAttribute('method', 'POST')
+
+        newDiv.appendChild(newForm)
 
                 mainChoice.appendChild(newDiv)
                 finalVAT = document.getElementById('finalVAT');
