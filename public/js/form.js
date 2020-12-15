@@ -19,6 +19,7 @@ const submitForm = document.getElementById('form')
 
 
 submitForm.addEventListener('submit', (e) => {
+    let taxType = "Income Tax"
     let dropDown = document.getElementById('residence').value
     let statusRadio
     let benefits
@@ -47,7 +48,8 @@ submitForm.addEventListener('submit', (e) => {
             dropDown,
             statusRadio,
             totIncome,
-            benefits
+            benefits,
+            taxType
         })
     })
         .then(result => result.json())
@@ -59,6 +61,18 @@ submitForm.addEventListener('submit', (e) => {
         <p>Your income tax is ${data.incomeTax}</p>
         <p>Your Pension fee is ${data.pensionTax}</p>
         `;
+
+            let newForm = document.createElement('form')
+            newForm.innerHTML = `
+        <input type="hidden" name="taxType" value="${data.taxType}">
+        <input type="hidden" name="pensionTax" value="${data.pensionTax}">
+        <input type="hidden" name="incomeTax" value="${data.incomeTax}">
+        <input type="hidden" name="grossIncome" value="${data.grossIncome}">
+        <button type="submit">Add to record</button>`
+            newForm.setAttribute('action', 'http://localhost:3000/recordsInc')
+            newForm.setAttribute('method', 'POST')
+
+            newDiv.appendChild(newForm)
 
             mainChoice.appendChild(newDiv)
             finalRes = document.getElementById('finalResult');
@@ -79,7 +93,7 @@ corpBtn.addEventListener('click', () => {
     if (finalRes) {
         finalRes.remove()
     }
-    if(finalVAT) {
+    if (finalVAT) {
         finalVAT.remove()
     }
 })
@@ -88,7 +102,7 @@ personIncBtn.addEventListener('click', (e) => {
     if (finalRes) {
         finalRes.remove()
     }
-    if(finalVAT) {
+    if (finalVAT) {
         finalVAT.remove()
     }
     e.stopPropagation()
@@ -104,7 +118,7 @@ personVATBtn.addEventListener('click', (e) => {
     }
     bothVAT.style.display = 'block'
     personIncome.style.display = "none"
-    if(finalVAT) {
+    if (finalVAT) {
         finalVAT.remove()
     }
 })
@@ -115,7 +129,7 @@ corpVATBtn.addEventListener('click', (e) => {
     }
     bothVAT.style.display = 'block'
     personIncome.style.display = "none"
-    if(finalVAT) {
+    if (finalVAT) {
         finalVAT.remove()
     }
 })
@@ -154,15 +168,15 @@ submitVAT.addEventListener('submit', (e) => {
         <p>Your VAT payable is ${data.totalVAT}</p>
         
         `;
-        let newForm = document.createElement('form')
-        newForm.innerHTML = `
+                let newForm = document.createElement('form')
+                newForm.innerHTML = `
         <input type="hidden" name="taxType" value="${data.taxType}">
         <input type="hidden" name="VATAmount" value="${data.totalVAT}">
         <button type="submit">Add to record</button>`
-        newForm.setAttribute('action', 'http://localhost:3000/records')
-        newForm.setAttribute('method', 'POST')
+                newForm.setAttribute('action', 'http://localhost:3000/recordsVAT')
+                newForm.setAttribute('method', 'POST')
 
-        newDiv.appendChild(newForm)
+                newDiv.appendChild(newForm)
 
                 mainChoice.appendChild(newDiv)
                 finalVAT = document.getElementById('finalVAT');

@@ -7,7 +7,7 @@ const recordSchema = new Schema({
         required : true
     },
     Tax_Amount : {
-        type: Number,
+        type: Object,
         required : true
     },
     user : {

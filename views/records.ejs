@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Records</title>
+</head>
+
+<body>
+    <%for (record of data) {%>
+        <ul>
+            <li> Tax : <%=record._doc.Tax_Type%>
+            </li>
+            <% for(let obj in record._doc.Tax_Amount) { %>
+
+                <li>
+                    <%=obj%> : <%=record._doc.Tax_Amount[obj].toFixed(2)%>
+                </li>
+
+                <%}%>
+                <li>Record created at:<%=record.createdAt%></li>
+        </ul>
+
+
+        <%}%>
+</body>
+
+</html>
+<!-- {# for coments in ejs#} add this -->
