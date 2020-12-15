@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <header id="backImage">
+        <div id="navigation">
+            <ul id="first">
+                <li><a href="http://localhost:3000">Home</a> </li>
+                <li><a href="http://localhost:3000/form"> Calculator</a> </li>
+                <li><a href="http://localhost:3000/records">Records</a></li>
+
+            </ul>
+            <ul id="Second">
+                <li><a href="http://localhost:3000/auth?code=1">Login </a></li>
+                <li><a href="http://localhost:3000/auth?code=2">Signup </a></li>
+            </ul>
+        </div>
+
+    </header>
+    <main>
+        <form action="<%=code===2 ? 'http://localhost:3000/postSignup' : 'http://localhost:3000/postLogin' %>" method="POST">
+            <% if (code === 2) {%>
+            <label for="username">Username</label>
+            <div> <input type="text" id="username" name="username"> </div>
+            <%}%>
+            <label for="email">Email</label>
+            <div> <input type="email" id="email" name="email"> </div>
+            <label for="password">password</label>
+            <div> <input type="password" id="password" name="password"> </div>
+
+            <button type="submit" class="btn"> <%=code===2 ? 'sign up' : 'log in'%> </button>
+        </form>
+    </main>
+</body>
+
+</html>

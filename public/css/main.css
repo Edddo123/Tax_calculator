@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+body {
+    margin: 0;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    line-height: 2.5rem;
+    
+
+}
+
+
+#backImage {
+    width: 100%;
+    background-image: url("../images/lincln.jpeg");
+    background-size: cover ;
+    background-position: center;
+    height: 80vh;
+}
+
+#title {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: rgb(56, 53, 61);
+    padding: 0px 20px;
+    font-size: 3vh;
+    padding-left: 10vw;
+}
+h1 {
+    margin-bottom: 50px;
+}
+
+h2 {
+    
+    font-size: 20px;
+}
+
+h3 {
+    
+    color: rgb(56, 53, 61);
+    font-size: 15px;
+}
+
+a {
+    text-decoration: none;
+    padding: 3px;
+    width: 20%;
+    /* border: solid 2px rgb(56, 53, 61); */
+    color: rgb(53, 60, 61);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#links {
+    padding-top: 30px;
+}
+
+a:hover {
+    background-color: rgba(225, 233, 232);
+   
+    animation-name: linkColor;
+    animation-duration: 0.5s;
+}
+
+#navigation {
+    width: 100%;
+    display: flex;
+   
+    
+}
+
+#first {
+    
+    display: flex;
+   
+}
+
+#Second {
+    
+    display: flex;
+    
+}
+
+li {
+    padding: 15px;
+    list-style: none;
+}
+
+#about-header  {
+    padding-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 8em
+  
+}
+
+#about-p {
+    font-family: sans-serif;
+    padding: 5px;
+}
+
+main {
+    background-color: rgb(182, 181, 181);
+}
+
+
+
+@keyframes linkColor {
+    from {background-color: inherit;}
+    to {background-color: rgb(225, 233, 232);}
+  }

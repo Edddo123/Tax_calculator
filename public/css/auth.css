@@ -1,0 +1,88 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+body {
+    margin: 0;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    line-height: 2.5rem;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgb(150, 150, 150), rgb(255, 255, 255));
+
+}
+
+
+
+a {
+    text-decoration: none;
+    padding: 3px;
+    width: 20%;
+    /* border: solid 2px rgb(56, 53, 61); */
+    color: rgb(53, 60, 61);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#links {
+    padding-top: 30px;
+}
+
+a:hover {
+    background-color: rgba(225, 233, 232);
+   
+    animation-name: linkColor;
+    animation-duration: 0.5s;
+}
+
+#navigation {
+    width: 100%;
+    display: flex;
+   
+    
+}
+
+#first {
+    
+    display: flex;
+   
+}
+
+#Second {
+    
+    display: flex;
+    
+}
+
+li {
+    padding: 15px;
+    list-style: none;
+}
+
+main {
+    display: flex;
+  
+    justify-content: center;
+
+}
+
+.btn:hover {
+    background-color: rgba(225, 233, 232);
+    cursor: pointer;
+   
+    animation-name: linkColor;
+    animation-duration: 0.5s;
+}
+
+.btn {
+   
+    font-size: 20px;
+}
+
+
+
+
+@keyframes linkColor {
+    from {background-color: inherit;}
+    to {background-color: rgb(225, 233, 232);}
+  }

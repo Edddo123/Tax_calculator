@@ -1,5 +1,10 @@
 const Record = require('../models/record')
 
+
+exports.getMain = (req, res, next) => {
+    res.render('main.ejs')
+}
+
 exports.getForm = (req, res, next) => {
     res.render('index')
 }
@@ -73,11 +78,10 @@ exports.postRecordsInc = (req, res, next) =>{
     .then(data=> {
      let newData =   data.map(x =>{
             let convertedDate = new Date(x.createdAt)
-            let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${convertedDate.getMinutes()}`
+            let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' +convertedDate.getMinutes()).slice(-2)}` //slice negative iwevs bolodan anu -2 aris bolodan meore wevri da tu marto start maq mashin end ad array lengths aigebs
             return {...x, createdAt : formattedDate}
-            // return{...x, user: {name : 'Michael'}}
         }) //es mibrunebs objectebis arrays sadac shecvlili monacemi tavidanvea da _doc shi aris dzveli monacemebi
-        
+        // ${convertedDate.getMinutes()<10?'0':''}${convertedDate.getMinutes()} anu tu 10ze naklebia 0s wers da mere minutes umatebs da gamodis
         
         res.render('records', {
             data : newData,
@@ -86,10 +90,11 @@ exports.postRecordsInc = (req, res, next) =>{
     .catch(err=>console.log(err))
  }
 
-//  <!-- <% for(obj in data.Tax_Amount) { %>
-//     <ul>
-//         <li>obj : data.Tax_Amount[obj]</li>
-//     </ul>
+ exports.getAuth = (req, res, next) => {
+     const code = +req.query.code
+     res.render('auth.ejs' , {
+         code
+     })
+ }
 
-
-// <%}%> -->
+// {#comment for ejs but still shows on page as html#}
