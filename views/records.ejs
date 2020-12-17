@@ -13,13 +13,16 @@
     <div id="navigation">
         <ul id="first">  
             <li><a href="http://localhost:3000">Home</a> </li>
-            <li><a href="http://localhost:3000/form"> Calculator</a> </li>
-            <li><a href="http://localhost:3000/records">Records</a></li>
+            <li><a href="http://localhost:3000/form?tok=Bearer <%=myTok%>"> Calculator</a> </li>
+            <li><a href="http://localhost:3000/records?tok=Bearer <%=myTok%>">Records</a></li>
 
         </ul>
         <ul id="Second">
-            <li><a href="http://localhost:3000/auth?code=1">Login </a></li>
-            <li><a href="http://localhost:3000/auth?code=2">Signup </a></li>
+            <li><a href="http://localhost:3000/getLogin">Login </a></li>
+            <li><a href="http://localhost:3000/getSign">Signup </a></li>
+            <form action="http://localhost:3000/postLogout" method="POST">
+                <button type="submit" id="Logout"> <li>Logout</li> </button>
+                 </form>
         </ul>
     </div>
     <%for (record of data) {%>

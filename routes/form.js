@@ -1,4 +1,5 @@
 const express = require('express')
+const isAuth = require('../middleware/isAuth')
 
 const router = express.Router()
 
@@ -7,23 +8,28 @@ const formController = require('../controller/form')
 
 router.get('/',formController.getMain)
 
-router.get('/form', formController.getForm)
+router.get('/form',isAuth, formController.getForm)
 
-router.put('/persnInc', formController.persnInc)
+router.put('/persnInc',isAuth,formController.persnInc)
 
-router.put('/totalVAT', formController.totalVAT)
+router.put('/totalVAT',isAuth, formController.totalVAT)
 
-router.post('/recordsVAT', formController.postRecordsVAT)
+router.post('/recordsVAT', isAuth, formController.postRecordsVAT)
 
-router.post('/recordsInc', formController.postRecordsInc)
+router.post('/recordsInc',isAuth,  formController.postRecordsInc)
 
-router.get('/records', formController.getRecords)
+router.get('/records', isAuth,  formController.getRecords)
 
-router.get('/auth', formController.getAuth)
+router.get('/getSign', formController.getAuth)
 
-router.post('/postSignup')
+router.get('/getLogin', formController.getLogin)
 
-router.post('/postLogin')
+router.post('/postLogout', formController.postLogout)
+
+
+router.post('/postSignup', formController.postSignup)
+
+router.post('/postLogin', formController.postLogin)
 
 
 module.exports = router

@@ -8,6 +8,9 @@ const personVATBtn = document.getElementById('personVATBtn')
 const corpVATBtn = document.getElementById('corpVATBtn')
 const mainChoice = document.getElementById('choice')
 const bothVAT = document.getElementById('bothVAT')
+const logoutBtn = document.getElementById('Logout')
+
+
 
 let finalRes
 let finalVAT
@@ -16,7 +19,10 @@ const submitVAT = document.getElementById('VATform')
 const submitForm = document.getElementById('form')
 
 
-
+logoutBtn.addEventListener('click', logMeOut)
+function logMeOut() {
+    localStorage.removeItem("jwt");
+}
 
 submitForm.addEventListener('submit', (e) => {
     let taxType = "Income Tax"
@@ -36,12 +42,13 @@ submitForm.addEventListener('submit', (e) => {
     } else {
         benefits = document.getElementById('no').value
     }
-
+    e.stopPropagation()
     e.preventDefault()
     fetch('http://localhost:3000/persnInc', {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
         },
         //its same as dropDown : dropDown
         body: JSON.stringify({
@@ -62,21 +69,47 @@ submitForm.addEventListener('submit', (e) => {
         <p>Your Pension fee is ${data.pensionTax}</p>
         `;
 
-            let newForm = document.createElement('form')
-            newForm.innerHTML = `
-        <input type="hidden" name="taxType" value="${data.taxType}">
-        <input type="hidden" name="pensionTax" value="${data.pensionTax}">
-        <input type="hidden" name="incomeTax" value="${data.incomeTax}">
-        <input type="hidden" name="grossIncome" value="${data.grossIncome}">
-        <button type="submit">Add to record</button>`
-            newForm.setAttribute('action', 'http://localhost:3000/recordsInc')
-            newForm.setAttribute('method', 'POST')
+           
 
-            newDiv.appendChild(newForm)
 
-            mainChoice.appendChild(newDiv)
+
+
+
             finalRes = document.getElementById('finalResult');
             personIncome.style.display = "none"
+            document.getElementById('recordIncForm').style.display = 'block'
+
+            document.getElementById('tryForm').addEventListener('submit', (e) => {
+                e.preventDefault()
+                document.getElementById('taxType').setAttribute('value', data.taxType)
+                document.getElementById('pensionTax').setAttribute('value', data.pensionTax)
+                document.getElementById('incomeTax').setAttribute('value', data.incomeTax)
+                document.getElementById('grossIncome').setAttribute('value', data.grossIncome)
+                const taxType =  document.getElementById('taxType').value
+                const pensionTax =  document.getElementById('pensionTax').value
+                const incomeTax =  document.getElementById('incomeTax').value
+                const grossIncome =  document.getElementById('grossIncome').value
+                fetch('http://localhost:3000/recordsInc', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+                    },
+                    body: JSON.stringify({
+                        taxType,
+                        pensionTax,
+                        incomeTax,
+                        grossIncome
+                    })
+                })
+                    .then(data => data.json())
+                    .then(result => {
+                        console.log('we reached here')
+                        console.log('it came back')
+                        window.location.replace('http://localhost:3000/getLogin')
+                    })
+
+            })
         })
         .catch(err => console.log(err))
 })
@@ -118,6 +151,8 @@ personVATBtn.addEventListener('click', (e) => {
     }
     bothVAT.style.display = 'block'
     personIncome.style.display = "none"
+    document.getElementById('recordVATForm').style.display = 'none'
+
     if (finalVAT) {
         finalVAT.remove()
     }
@@ -129,19 +164,23 @@ corpVATBtn.addEventListener('click', (e) => {
     }
     bothVAT.style.display = 'block'
     personIncome.style.display = "none"
+    document.getElementById('recordVATForm').style.display = 'none'
+
     if (finalVAT) {
         finalVAT.remove()
     }
 })
 
 submitVAT.addEventListener('submit', (e) => {
+
     let totalSales = document.getElementById('totVAT1').value
     let taxType = "VAT"
     e.preventDefault()
     fetch('http://localhost:3000/totalVAT', {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
         },
         body: JSON.stringify({
             totalSales,
@@ -151,7 +190,7 @@ submitVAT.addEventListener('submit', (e) => {
     })
         .then(result => result.json())
         .then(data => {
-            console.log(data)
+            
             if (data.messageVAT) {
                 let newDiv = document.createElement('div')
                 newDiv.setAttribute('id', 'noVAT')
@@ -160,6 +199,7 @@ submitVAT.addEventListener('submit', (e) => {
                 finalVAT = document.getElementById('noVAT');
                 personIncome.style.display = "none"
                 bothVAT.style.display = 'none'
+                document.getElementById('recordVATForm').style.display = 'none'
             }
             else {
                 let newDiv = document.createElement('div')
@@ -168,22 +208,44 @@ submitVAT.addEventListener('submit', (e) => {
         <p>Your VAT payable is ${data.totalVAT}</p>
         
         `;
-                let newForm = document.createElement('form')
-                newForm.innerHTML = `
-        <input type="hidden" name="taxType" value="${data.taxType}">
-        <input type="hidden" name="VATAmount" value="${data.totalVAT}">
-        <button type="submit">Add to record</button>`
-                newForm.setAttribute('action', 'http://localhost:3000/recordsVAT')
-                newForm.setAttribute('method', 'POST')
 
-                newDiv.appendChild(newForm)
+                
 
-                mainChoice.appendChild(newDiv)
                 finalVAT = document.getElementById('finalVAT');
                 personIncome.style.display = "none"
                 bothVAT.style.display = 'none'
+                document.getElementById('recordVATForm').style.display = 'block'
+
+                document.getElementById('tryFormVAT').addEventListener('submit', (e) => {
+                    e.preventDefault()
+                    document.getElementById('taxType').setAttribute('value', data.taxType)
+                    document.getElementById('totalVAT').setAttribute('value', data.totalVAT)
+                    const taxType =  document.getElementById('taxType').value
+                    const totalVAT =  document.getElementById('totalVAT').value
+                    
+                 return   fetch('http://localhost:3000/recordsVAT', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+                        },
+                        body: JSON.stringify({
+                            taxType,
+                            totalVAT
+                            
+                        })
+                    })
+                        .then(data => data.json())
+                        .then(result => {
+                          console.log('we get here?')
+                            window.location.replace('http://localhost:3000/getLogin')
+                        })
+    
+                })
 
             }
         })
         .catch(err => console.log(err))
 })
+
+

@@ -1,8 +1,15 @@
 body {
     height: 100vh;
     background: linear-gradient(to bottom, rgb(150, 150, 150), rgb(255, 255, 255));
+    
 }
 
+#recordIncForm {
+    display: none;
+}
+#recordVATForm {
+    display: none;
+}
 
 #person {
     display: none;

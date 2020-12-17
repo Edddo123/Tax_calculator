@@ -11,8 +11,10 @@ const recordSchema = new Schema({
         required : true
     },
     user : {
-        type : Object
-    },
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
     
     
 },

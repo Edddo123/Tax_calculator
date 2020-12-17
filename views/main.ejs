@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
+
 <body>
     <header id="backImage">
         <div id="navigation">
-            <ul id="first">  
+            <ul id="first">
                 <li><a href="http://localhost:3000">Home</a> </li>
-                <li><a href="http://localhost:3000/form"> Calculator</a> </li>
-                <li><a href="http://localhost:3000/records">Records</a></li>
+                <li><a href="http://localhost:3000/form?tok=Bearer <%=myTok%>"> Calculator</a> </li>
+                <li><a href="http://localhost:3000/records?tok=Bearer <%=myTok%>">Records</a></li>
 
             </ul>
             <ul id="Second">
-                <li><a href="http://localhost:3000/auth?code=1">Login </a></li>
-                <li><a href="http://localhost:3000/auth?code=2">Signup </a></li>
+                <li><a href="http://localhost:3000/getLogin">Login </a></li>
+                <li><a href="http://localhost:3000/getSign">Signup </a></li>
+                <form action="http://localhost:3000/postLogout" method="POST">
+                    <button type="submit" id="Logout">
+                        <li>Logout</li>
+                    </button>
+                </form>
             </ul>
         </div>
         <div id="title">
@@ -25,20 +32,33 @@
             <h2>Taxes Simplifed for YOU</h2>
             <h2>Sign up for FREE and let us do</h2>
             <h2>BORING taxes for YOU</h2>
-           <div id="links">
-            <a href="#" id="sign">Sign up</a>
-            <h3>Already have account? then login</h3>
-            <a href="#" id="login">Login</a>
-        </div>
+            <div id="links">
+                <a href="#" id="sign">Sign up</a>
+                <h3>Already have account? then login</h3>
+                <a href="#" id="login">Login</a>
+            </div>
 
         </div>
     </header>
     <main>
         <div id="about">
             <h1 id="about-header">About us</h1>
-            <div id="about-p">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias necessitatibus at voluptas iusto itaque ex minima, corrupti dolorum consequuntur repellat est. Hic sint suscipit vel fugiat optio beatae non quod dolor, maiores quam temporibus voluptate saepe omnis officia, vitae distinctio quisquam sapiente eius porro inventore alias obcaecati et. Doloremque id facere obcaecati a distinctio! Cupiditate illo veritatis maxime porro quasi eos dignissimos pariatur a! Magnam reprehenderit earum quo tempora quasi.</div>
+            <div id="about-p">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias necessitatibus at voluptas
+                iusto itaque ex minima, corrupti dolorum consequuntur repellat est. Hic sint suscipit vel fugiat optio
+                beatae non quod dolor, maiores quam temporibus voluptate saepe omnis officia, vitae distinctio quisquam
+                sapiente eius porro inventore alias obcaecati et. Doloremque id facere obcaecati a distinctio!
+                Cupiditate illo veritatis maxime porro quasi eos dignissimos pariatur a! Magnam reprehenderit earum quo
+                tempora quasi.</div>
         </div>
     </main>
-    
+    <script>
+        const logoutBtn = document.getElementById('Logout')
+
+        logoutBtn.addEventListener('click', logMeOut)
+        function logMeOut() {
+            localStorage.removeItem("jwt");
+        }
+    </script>
 </body>
+
 </html>
