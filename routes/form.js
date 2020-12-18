@@ -31,5 +31,9 @@ router.post('/postSignup', formController.postSignup)
 
 router.post('/postLogin', formController.postLogin)
 
+router.get('/getPosts', formController.getPosts)
+
+router.post('/addPost', isAuth, formController.addPost)
+
 
 module.exports = router

@@ -68,7 +68,7 @@ submitForm.addEventListener('submit', (e) => {
         <p>Your income tax is ${data.incomeTax}</p>
         <p>Your Pension fee is ${data.pensionTax}</p>
         `;
-
+            mainChoice.appendChild(newDiv)
            
 
 
@@ -117,12 +117,16 @@ submitForm.addEventListener('submit', (e) => {
 personBtn.addEventListener('click', () => {
     person.style.display = "block"
     corporation.style.display = "none"
+   
 })
 corpBtn.addEventListener('click', () => {
     corporation.style.display = "block"
     person.style.display = "none"
     personIncome.style.display = "none"
     bothVAT.style.display = 'none'
+    document.getElementById('recordIncForm').style.display = 'none'
+    document.getElementById('recordVATForm').style.display = 'none'
+
     if (finalRes) {
         finalRes.remove()
     }
@@ -139,6 +143,9 @@ personIncBtn.addEventListener('click', (e) => {
         finalVAT.remove()
     }
     e.stopPropagation()
+    document.getElementById('recordIncForm').style.display = 'none'
+    document.getElementById('recordVATForm').style.display = 'none'
+
     personIncome.style.display = "block"
     bothVAT.style.display = 'none'
 
@@ -151,6 +158,8 @@ personVATBtn.addEventListener('click', (e) => {
     }
     bothVAT.style.display = 'block'
     personIncome.style.display = "none"
+    document.getElementById('recordIncForm').style.display = 'none'
+
     document.getElementById('recordVATForm').style.display = 'none'
 
     if (finalVAT) {
@@ -164,7 +173,9 @@ corpVATBtn.addEventListener('click', (e) => {
     }
     bothVAT.style.display = 'block'
     personIncome.style.display = "none"
+    document.getElementById('recordIncForm').style.display = 'none'
     document.getElementById('recordVATForm').style.display = 'none'
+    
 
     if (finalVAT) {
         finalVAT.remove()
@@ -209,7 +220,7 @@ submitVAT.addEventListener('submit', (e) => {
         
         `;
 
-                
+                mainChoice.appendChild(newDiv)
 
                 finalVAT = document.getElementById('finalVAT');
                 personIncome.style.display = "none"

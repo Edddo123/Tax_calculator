@@ -4,46 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Records</title>
-    <link rel="stylesheet" href="/css/records.css">
+    <title>Taxes</title>
+    <link rel="stylesheet" href="/css/form.css">
+    <!-- <link rel="stylesheet" href="/css/main.css"> -->
 
 </head>
 
 <body>
-    <div id="navigation">
+    <div id="whole">
+    <div id="navigation" class="calculator">
         <ul id="first">  
             <li><a href="http://localhost:3000">Home</a> </li>
             <li><a href="http://localhost:3000/form?tok=Bearer <%=myTok%>"> Calculator</a> </li>
             <li><a href="http://localhost:3000/records?tok=Bearer <%=myTok%>">Records</a></li>
             <li><a href="http://localhost:3000/getPosts">Feedback</a></li>
 
-
         </ul>
         <ul id="Second">
             <li><a href="http://localhost:3000/getLogin">Login </a></li>
             <li><a href="http://localhost:3000/getSign">Signup </a></li>
             <form action="http://localhost:3000/postLogout" method="POST">
-                <button type="submit" id="Logout"> <li>Logout</li> </button>
-                 </form>
+           <button type="submit" id="Logout"> <li>Logout</li> </button>
+            </form>
         </ul>
+    </div> 
+    
+</div>
+
+    <div id="submitFeed">
+        <form id="feedForm">
+            <label for="content">Write your feedback</label>
+            <input type="text" id="content">
+            <button type="submit">Post your feedback</button>
+        </form>
     </div>
+
     <%for (record of data) {%>
-        <ul class="record">
-            <li> Tax : <%=record._doc.Tax_Type%>
+        <ul class="record" style="border: 2px solid;">
+            <li> Posted By : <%=record._doc.creator%> , at:<%=record.createdAt%>
             </li>
-            <% for(let obj in record._doc.Tax_Amount) { %>
-
-                <li>
-                    <%=obj%> : <%=record._doc.Tax_Amount[obj].toFixed(2)%>
-                </li>
-
-                <%}%>
-                <li>Record created at:<%=record.createdAt%></li>
+           <p><%=record._doc.content%> </p>
+              
         </ul>
 
 
         <%}%>
+
+    <script src="/js/feed.js"></script>
 </body>
 
 </html>
-<!-- {# for coments in ejs#} add this -->

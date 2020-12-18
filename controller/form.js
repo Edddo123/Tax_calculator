@@ -1,5 +1,6 @@
 const Record = require('../models/record')
 const User = require('../models/user')
+const Post = require('../models/post')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -7,13 +8,13 @@ const jwt = require('jsonwebtoken')
 let saveTok
 exports.getMain = (req, res, next) => {
     res.render('main.ejs', {
-        myTok : saveTok
+        myTok: saveTok
     })
 }
 
 exports.getForm = (req, res, next) => {
     res.render('index', {
-        myTok : saveTok
+        myTok: saveTok
     })
 }
 
@@ -70,17 +71,17 @@ exports.postRecordsInc = (req, res, next) => {
     })
     newRecord.save()
         .then(result => {
-            res.status(200).json({message : 'record posted'})
+            res.status(200).json({ message: 'record posted' })
         })
         .catch(err => console.log('we have err in catch'))
 
 }
 
 exports.getRecords = (req, res, next) => {
-    
-    return Record.find({user : req.userId})
+
+    return Record.find({ user: req.userId })
         .then(data => {
-            
+
             let newData = data.map(x => {
                 let convertedDate = new Date(x.createdAt)
                 let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}` //slice negative iwevs bolodan anu -2 aris bolodan meore wevri da tu marto start maq mashin end ad array lengths aigebs
@@ -90,25 +91,25 @@ exports.getRecords = (req, res, next) => {
 
             res.render('records', {
                 data: newData,
-                myTok : saveTok
+                myTok: saveTok
             })
         })
         .catch(err => console.log(err))
 }
 
 exports.getAuth = (req, res, next) => {
-    
+
     res.render('auth.ejs', {
-        
-        myTok : saveTok
+
+        myTok: saveTok
     })
 }
 
 exports.getLogin = (req, res, next) => {
-   
-    
+
+
     res.render('login', {
-        myTok : saveTok
+        myTok: saveTok
     })
 }
 
@@ -135,12 +136,12 @@ exports.postSignup = (req, res, next) => {
 
 
 exports.postLogin = (req, res, next) => {
-    
+
     const email = req.body.email
     const password = req.body.password
     User.findOne({ email: email })
         .then(user => {
-           
+
             if (!user) {
                 throw new Error('No user found')
             }
@@ -151,20 +152,61 @@ exports.postLogin = (req, res, next) => {
                     }
                     const token = jwt.sign({
                         email: user.email,
-                        userId : user._id.toString(),
-                    }, 'secret', {expiresIn : '30min'})
-                    
-                    res.status(200).json({token : token, userId :user._id.toString() })
+                        userId: user._id.toString(),
+                    }, 'secret', { expiresIn: '30min' })
+
+                    res.status(200).json({ token: token, userId: user._id.toString() })
                     saveTok = token
                 })
-                .catch(err=> console.log(err))
+                .catch(err => console.log(err))
         })
 }
 
-exports.postLogout = (req, res, next) =>{
+exports.postLogout = (req, res, next) => {
     saveTok = '';
     res.redirect('/getLogin')
 }
 
+
+exports.getPosts = (req, res, next) => {
+    Post.find()
+        .then(data => {
+            let newData = data.map(x => {
+                let convertedDate = new Date(x.createdAt)
+                let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}` //slice negative iwevs bolodan anu -2 aris bolodan meore wevri da tu marto start maq mashin end ad array lengths aigebs
+                return { ...x, createdAt: formattedDate }
+
+
+            })
+            res.render('feed', {
+                data : newData,
+                myTok: saveTok
+            })
+
+        })
+        .catch(err => console.log(err))
+    }
+
+    exports.addPost = (req, res, next) => {
+        const content = req.body.content
+        User.findById(req.userId)
+            .then(user => {
+                const post = new Post({
+                    creator: user.name,
+                    content: content,
+                    userId: req.userId
+                })
+                post.save()
+                    .then(result => {
+                        res.status(200).json({ message: 'Post added Successfully' })
+                    })
+
+
+            })
+            .catch(err => console.log(err))
+
+
+
+    }
 
 // {#comment for ejs but still shows on page as html#}
