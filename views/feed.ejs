@@ -12,24 +12,26 @@
 
 <body>
     <div id="whole">
-    <div id="navigation" class="calculator">
-        <ul id="first">  
-            <li><a href="http://localhost:3000">Home</a> </li>
-            <li><a href="http://localhost:3000/form?tok=Bearer <%=myTok%>"> Calculator</a> </li>
-            <li><a href="http://localhost:3000/records?tok=Bearer <%=myTok%>">Records</a></li>
-            <li><a href="http://localhost:3000/getPosts">Feedback</a></li>
+        <div id="navigation" class="calculator">
+            <ul id="first">
+                <li><a href="http://localhost:3000">Home</a> </li>
+                <li><a href="http://localhost:3000/form?tok=Bearer <%=myTok%>"> Calculator</a> </li>
+                <li><a href="http://localhost:3000/records?tok=Bearer <%=myTok%>">Records</a></li>
+                <li><a href="http://localhost:3000/getPosts">Feedback</a></li>
 
-        </ul>
-        <ul id="Second">
-            <li><a href="http://localhost:3000/getLogin">Login </a></li>
-            <li><a href="http://localhost:3000/getSign">Signup </a></li>
-            <form action="http://localhost:3000/postLogout" method="POST">
-           <button type="submit" id="Logout"> <li>Logout</li> </button>
-            </form>
-        </ul>
-    </div> 
-    
-</div>
+            </ul>
+            <ul id="Second">
+                <li><a href="http://localhost:3000/getLogin">Login </a></li>
+                <li><a href="http://localhost:3000/getSign">Signup </a></li>
+                <form action="http://localhost:3000/postLogout" method="POST">
+                    <button type="submit" id="Logout">
+                        <li>Logout</li>
+                    </button>
+                </form>
+            </ul>
+        </div>
+
+    </div>
 
     <div id="submitFeed">
         <form id="feedForm">
@@ -38,19 +40,26 @@
             <button type="submit">Post your feedback</button>
         </form>
     </div>
-
+    
+    <div id="postContainer">
     <%for (record of data) {%>
         <ul class="record" style="border: 2px solid;">
             <li> Posted By : <%=record._doc.creator%> , at:<%=record.createdAt%>
             </li>
-           <p><%=record._doc.content%> </p>
-              
+            <p>
+                <%=record._doc.content%>
+            </p>
+
         </ul>
 
 
         <%}%>
 
-    <script src="/js/feed.js"></script>
+    </div>
+            <script src="/socket.io/socket.io.js"></script>
+            <script src="js/feed.js"></script>
+            
+
 </body>
 
 </html>

@@ -1,9 +1,12 @@
+
 const Record = require('../models/record')
 const User = require('../models/user')
 const Post = require('../models/post')
+const io = require('../app')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const sock = require('../socket')
 
 let saveTok
 exports.getMain = (req, res, next) => {
@@ -169,6 +172,19 @@ exports.postLogout = (req, res, next) => {
 
 
 exports.getPosts = (req, res, next) => {
+  
+ /*   req.io.on('connection', socket => {
+        socket.on('contents', msg => {
+            console.log('message is '+msg) //socket.emit single users egzavneba vinc areuqestebs, io.emit yvela users egzavneba vinc serverzea da socket.broadcast.emit yvelas egzavneba imis garda vinc agzavnis
+          //   socket.broadcast.emit('message', 'whats up')
+            req.io.emit('message', 'whats up')
+          //   socket.emit('message', 'whats up')
+  
+        })
+    }) */
+    
+ 
+   
     Post.find()
         .then(data => {
             let newData = data.map(x => {
@@ -188,9 +204,11 @@ exports.getPosts = (req, res, next) => {
     }
 
     exports.addPost = (req, res, next) => {
+        let ourUser
         const content = req.body.content
         User.findById(req.userId)
             .then(user => {
+                ourUser = user
                 const post = new Post({
                     creator: user.name,
                     content: content,
@@ -198,6 +216,25 @@ exports.getPosts = (req, res, next) => {
                 })
                 post.save()
                     .then(result => {
+                        let convertedDate = new Date(result.createdAt)
+                        let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
+                        
+                       let newResult = {...result, createdAt : formattedDate }
+                        // .on('connection' ,(socket) => {
+                            // sock.getIO().emit('contents', msg => {
+                            //     console.log(msg)
+                                sock.getIO().emit('message', {post : newResult})
+                            // })
+                        // })
+                        // req.io.on('connection', socket => {
+                        //     socket.on('contents', msg => {
+                                
+                        //         req.io.emit('message', {text : msg, user : ourUser})
+                             
+                      
+                        //     })
+                        // })
+                        
                         res.status(200).json({ message: 'Post added Successfully' })
                     })
 
