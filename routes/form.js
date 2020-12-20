@@ -35,5 +35,10 @@ router.get('/getPosts', formController.getPosts)
 
 router.post('/addPost', isAuth, formController.addPost)
 
+router.delete('/deletePost/:postId',isAuth, formController.deletePost)
+
+router.delete('/deleteRecord/:recordId',isAuth, formController.deleteRecord)
+
+
 
 module.exports = router

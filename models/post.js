@@ -15,6 +15,6 @@ const postSchema = new Schema({
         required : true,
         ref : 'User'
     }
-}, {timestamps: true})
+}, {timestamps: true}, {useFindandModify: false})
 
 module.exports = mongoose.model('Post', postSchema)

@@ -172,19 +172,19 @@ exports.postLogout = (req, res, next) => {
 
 
 exports.getPosts = (req, res, next) => {
-  
- /*   req.io.on('connection', socket => {
-        socket.on('contents', msg => {
-            console.log('message is '+msg) //socket.emit single users egzavneba vinc areuqestebs, io.emit yvela users egzavneba vinc serverzea da socket.broadcast.emit yvelas egzavneba imis garda vinc agzavnis
-          //   socket.broadcast.emit('message', 'whats up')
-            req.io.emit('message', 'whats up')
-          //   socket.emit('message', 'whats up')
-  
-        })
-    }) */
-    
- 
-   
+
+    /*   req.io.on('connection', socket => {
+           socket.on('contents', msg => {
+               console.log('message is '+msg) //socket.emit single users egzavneba vinc areuqestebs, io.emit yvela users egzavneba vinc serverzea da socket.broadcast.emit yvelas egzavneba imis garda vinc agzavnis
+             //   socket.broadcast.emit('message', 'whats up')
+               req.io.emit('message', 'whats up')
+             //   socket.emit('message', 'whats up')
+     
+           })
+       }) */
+
+
+
     Post.find()
         .then(data => {
             let newData = data.map(x => {
@@ -195,55 +195,118 @@ exports.getPosts = (req, res, next) => {
 
             })
             res.render('feed', {
-                data : newData,
+                data: newData,
                 myTok: saveTok
             })
 
         })
         .catch(err => console.log(err))
-    }
+}
 
-    exports.addPost = (req, res, next) => {
-        let ourUser
-        const content = req.body.content
-        User.findById(req.userId)
-            .then(user => {
-                ourUser = user
-                const post = new Post({
-                    creator: user.name,
-                    content: content,
-                    userId: req.userId
-                })
-                post.save()
-                    .then(result => {
-                        let convertedDate = new Date(result.createdAt)
-                        let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
-                        
-                       let newResult = {...result, createdAt : formattedDate }
-                        // .on('connection' ,(socket) => {
-                            // sock.getIO().emit('contents', msg => {
-                            //     console.log(msg)
-                                sock.getIO().emit('message', {post : newResult})
-                            // })
-                        // })
-                        // req.io.on('connection', socket => {
-                        //     socket.on('contents', msg => {
-                                
-                        //         req.io.emit('message', {text : msg, user : ourUser})
-                             
-                      
-                        //     })
-                        // })
-                        
-                        res.status(200).json({ message: 'Post added Successfully' })
-                    })
-
-
+exports.addPost = (req, res, next) => {
+    let ourUser
+    const content = req.body.content
+    User.findById(req.userId)
+        .then(user => {
+            ourUser = user
+            const post = new Post({
+                creator: user.name,
+                content: content,
+                userId: req.userId
             })
-            .catch(err => console.log(err))
+            post.save()
+                .then(result => {
+                    let convertedDate = new Date(result.createdAt)
+                    let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
+
+                    let newResult = { ...result, createdAt: formattedDate }
+                    // .on('connection' ,(socket) => {
+                    // sock.getIO().emit('contents', msg => {
+                    //     console.log(msg)
+                    sock.getIO().emit('message', { post: newResult })
+                    // })
+                    // })
+                    // req.io.on('connection', socket => {
+                    //     socket.on('contents', msg => {
+
+                    //         req.io.emit('message', {text : msg, user : ourUser})
+
+
+                    //     })
+                    // })
+
+                    res.status(200).json({ message: 'Post added Successfully' })
+                })
+
+
+        })
+        .catch(err => console.log(err))
 
 
 
-    }
+}
+
+
+exports.deletePost = (req, res, next) => {
+    let postData
+    const postId = req.params.postId
+
+    Post.findById(postId)
+        .then(post => {
+            postData = post
+            if (!post) {
+                const error = new Error('Could not find post.');
+                error.statusCode = 404;
+                throw error;
+            }
+            if (post.userId.toString() !== req.userId) {
+                const error = new Error('Not authorized!');
+                error.statusCode = 403;
+                throw error;
+            }
+            return Post.findByIdAndRemove(postId)
+
+        })
+        // console.log(req.userId)
+        .then(result => {
+            sock.getIO().emit('deleteMessage', { deletedPost: postData })
+            console.log('deleted product')
+            res.status(200).json({ message: 'Product deleted' })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
+exports.deleteRecord = (req, res, next) => {
+    let recordData
+    const recordId = req.params.recordId
+
+    Record.findById(recordId)
+        .then(record => {
+            recordData = record
+            if (!record) {
+                const error = new Error('Could not find post.');
+                error.statusCode = 404;
+                throw error;
+            }
+            if (record.user.toString() !== req.userId) {
+                const error = new Error('Not authorized!');
+                error.statusCode = 403;
+                throw error;
+            }
+            return Record.findByIdAndRemove(recordId)
+
+        })
+        // console.log(req.userId)
+        .then(result => {
+
+            console.log('deleted product')
+            res.status(200).json({ message: 'Product deleted' })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
 
 // {#comment for ejs but still shows on page as html#}
