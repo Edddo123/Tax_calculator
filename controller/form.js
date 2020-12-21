@@ -2,7 +2,7 @@
 const Record = require('../models/record')
 const User = require('../models/user')
 const Post = require('../models/post')
-const io = require('../app')
+
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -81,8 +81,14 @@ exports.postRecordsInc = (req, res, next) => {
 }
 
 exports.getRecords = (req, res, next) => {
-
-    return Record.find({ user: req.userId })
+    let page = +req.query.page
+    let perPage = 2
+    let totalItems
+    return Record.find({ user: req.userId }).countDocuments()
+        .then(count => {
+            totalItems = count
+            return Record.find({ user: req.userId }).skip((page - 1) * perPage).limit(perPage)
+        })
         .then(data => {
 
             let newData = data.map(x => {
@@ -92,10 +98,16 @@ exports.getRecords = (req, res, next) => {
             }) //es mibrunebs objectebis arrays sadac shecvlili monacemi tavidanvea da _doc shi aris dzveli monacemebi
             // ${convertedDate.getMinutes()<10?'0':''}${convertedDate.getMinutes()} anu tu 10ze naklebia 0s wers da mere minutes umatebs da gamodis
 
-            res.render('records', {
-                data: newData,
-                myTok: saveTok
-            })
+            if (!page) {
+                res.render('records', {
+                    data: newData,
+                    myTok: saveTok
+                })
+            } else {
+
+
+                res.status(200).json({ data: newData, totalItems, perPage })
+            }
         })
         .catch(err => console.log(err))
 }
@@ -172,20 +184,15 @@ exports.postLogout = (req, res, next) => {
 
 
 exports.getPosts = (req, res, next) => {
+    let page = +req.query.page
+    let perPage = 2
+    let totalItems
 
-    /*   req.io.on('connection', socket => {
-           socket.on('contents', msg => {
-               console.log('message is '+msg) //socket.emit single users egzavneba vinc areuqestebs, io.emit yvela users egzavneba vinc serverzea da socket.broadcast.emit yvelas egzavneba imis garda vinc agzavnis
-             //   socket.broadcast.emit('message', 'whats up')
-               req.io.emit('message', 'whats up')
-             //   socket.emit('message', 'whats up')
-     
-           })
-       }) */
-
-
-
-    Post.find()
+    Post.find().countDocuments()
+        .then(count => {
+            totalItems = count
+            return Post.find().skip((page - 1) * perPage).limit(perPage)
+        })
         .then(data => {
             let newData = data.map(x => {
                 let convertedDate = new Date(x.createdAt)
@@ -194,14 +201,20 @@ exports.getPosts = (req, res, next) => {
 
 
             })
-            res.render('feed', {
-                data: newData,
-                myTok: saveTok
-            })
+            if (!page) {
+                res.render('feed', {
+                    data: newData,
+                    myTok: saveTok
+                })
+            } else {
+
+
+                res.status(200).json({ data: newData, totalItems, perPage })
+            }
 
         })
-        .catch(err => console.log(err))
 }
+
 
 exports.addPost = (req, res, next) => {
     let ourUser
@@ -309,4 +322,3 @@ exports.deleteRecord = (req, res, next) => {
         })
 }
 
-// {#comment for ejs but still shows on page as html#}

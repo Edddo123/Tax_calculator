@@ -1,13 +1,99 @@
 
 const form = document.getElementById('feedForm')
 const content = document.getElementById('content')
+const next = document.getElementById('next')
+const prev = document.getElementById('prev')
 
 
 form.addEventListener('submit', addPost)
 // form.addEventListener('submit', getSocket)
 
+let page = 1
+
+next.addEventListener('click', goNext)
+prev.addEventListener('click', goPrev)
+
 
 const socket = io()
+
+
+
+function goNext() {
+    const container = document.getElementById('postContainer')
+    page++
+    fetch('http://localhost:3000/getPosts?page=' + page, {
+        headers : {
+            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+        }
+    })
+    .then(result=> result.json())
+    .then(data => {
+        container.innerHTML = "";
+      
+        console.log(data)
+        for (let i=0; i<data.perPage; i++) {
+            
+            container.innerHTML += `<ul class="record" style="border: 2px solid;">
+            <li> Posted By : ${data.data[i]._doc.creator} , at:${data.data[i].createdAt}
+            </li>
+            <p>
+            ${data.data[i]._doc.content}
+            </p>
+
+            <input type="hidden" value="${data.data[i]._doc._id}" name="postId" class="hidden"
+                id="${data.data[i]._doc._id}M">
+            <button type="button" onclick="deleteProduct(this)" class="btn">Delete</button>
+        </ul>`
+        }
+        
+
+          
+        }) 
+        .catch(err => console.log(err))
+
+  
+}
+
+function goPrev() {
+
+    if(page > 1) {
+        page--
+    }
+    else page = 1
+    const container = document.getElementById('postContainer')
+    
+    fetch('http://localhost:3000/getPosts?page=' + page, {
+        headers : {
+            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+        }
+    })
+    .then(result=> result.json())
+    .then(data => {
+        container.innerHTML = "";
+      
+        console.log(data)
+        for (let i=0; i<data.perPage; i++) {
+            
+            container.innerHTML += `<ul class="record" style="border: 2px solid;">
+            <li> Posted By : ${data.data[i]._doc.creator} , at:${data.data[i].createdAt}
+            </li>
+            <p>
+            ${data.data[i]._doc.content}
+            </p>
+
+            <input type="hidden" value="${data.data[i]._doc._id}" name="postId" class="hidden"
+                id="${data.data[i]._doc._id}M">
+            <button type="button" onclick="deleteProduct(this)" class="btn">Delete</button>
+        </ul>`
+        }
+        
+
+          
+        }) 
+        .catch(err => console.log(err))
+
+  
+}
 
 socket.on('message', result => {
     const container = document.getElementById('postContainer')
@@ -46,17 +132,6 @@ socket.on('deleteMessage', result => {
         const parentElem = deletedInput.closest('ul')
         parentElem.remove()
     }
-    
-    // hidden.filter(p=> {
-    //  return   p.value === result.deletedPost._id
-    // })
-    
-    // console.log(typeof(hidden[0].value))
-    // console.log(typeof(result.deletedPost._id))
-
-    
-
-    // console.log(postId)
    
 
 })

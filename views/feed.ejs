@@ -40,27 +40,30 @@
             <button type="submit">Post your feedback</button>
         </form>
     </div>
-    
+
     <div id="postContainer">
-    <%for (record of data) {%>
-        <ul class="record" style="border: 2px solid;">
-            <li> Posted By : <%=record._doc.creator%> , at:<%=record.createdAt%>
-            </li>
-            <p>
-                <%=record._doc.content%>
-            </p>
-            
-            <input type="hidden" value="<%=record._doc._id%>" name="postId" class="hidden" id="<%=record._doc._id%>M"> 
-            <button type="button" onclick="deleteProduct(this)" class="btn">Delete</button> 
-        </ul>
+        <%for (record of data) {%>
+            <ul class="record" style="border: 2px solid;">
+                <li> Posted By : <%=record._doc.creator%> , at:<%=record.createdAt%>
+                </li>
+                <p>
+                    <%=record._doc.content%>
+                </p>
+
+                <input type="hidden" value="<%=record._doc._id%>" name="postId" class="hidden"
+                    id="<%=record._doc._id%>M">
+                <button type="button" onclick="deleteProduct(this)" class="btn">Delete</button>
+            </ul>
 
 
-        <%}%>
+            <%}%>
 
     </div>
-            <script src="/socket.io/socket.io.js"></script>
-            <script src="js/feed.js"></script>
-            
+    <button id="prev">Previous</button>
+    <button id="next">Next</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/feed.js"></script>
+
 
 </body>
 

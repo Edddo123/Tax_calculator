@@ -29,10 +29,12 @@
             </form>
         </ul>
     </div>
+    <div id="recordContainer">
     <%for (record of data) {%>
         <ul class="record">
             <li> Tax : <%=record._doc.Tax_Type%>
             </li>
+            <li>Tax Types</li>
             <% for(let obj in record._doc.Tax_Amount) { %>
 
                 <li>
@@ -49,6 +51,11 @@
 
 
         <%}%>
+
+    </div>
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+
 
         <script src="js/record.js"></script>
 </body>
