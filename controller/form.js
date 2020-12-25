@@ -2,6 +2,7 @@
 const Record = require('../models/record')
 const User = require('../models/user')
 const Post = require('../models/post')
+const { validationResult } = require('express-validator');
 
 
 const bcrypt = require('bcryptjs')
@@ -58,7 +59,10 @@ exports.postRecordsVAT = (req, res, next) => {
         .then(result => {
             res.redirect('/records')
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            const error = new Error(err);
+            return next(error);
+        })
 
 }
 
@@ -76,7 +80,10 @@ exports.postRecordsInc = (req, res, next) => {
         .then(result => {
             res.status(200).json({ message: 'record posted' })
         })
-        .catch(err => console.log('we have err in catch'))
+        .catch(err => {
+            const error = new Error(err);
+            return next(error);
+        })
 
 }
 
@@ -109,19 +116,28 @@ exports.getRecords = (req, res, next) => {
                 res.status(200).json({ data: newData, totalItems, perPage })
             }
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            const error = new Error(err);
+            return next(error);
+        })
 }
 
 exports.getAuth = (req, res, next) => {
 
     res.render('auth.ejs', {
 
-        myTok: saveTok
+        myTok: saveTok,
+        oldInput: {
+            email: '',
+            password: '',
+            name: '',
+
+        },
+        errorMessage: undefined
     })
 }
 
 exports.getLogin = (req, res, next) => {
-
 
     res.render('login', {
         myTok: saveTok
@@ -132,6 +148,20 @@ exports.postSignup = (req, res, next) => {
     const name = req.body.username
     const email = req.body.email
     const password = req.body.password
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors.array());
+        return res.status(422).render('auth', {
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+                email: email,
+                password: password,
+                name: name,
+
+            },
+            myTok: saveTok
+        });
+    }
     return bcrypt.hash(password, 10)
         .then(hashedPassword => {
             const user = new User({
@@ -146,7 +176,10 @@ exports.postSignup = (req, res, next) => {
         })
 
 
-        .catch(err => console.log(err))
+        .catch(err => {
+            const error = new Error(err);
+            return next(error);
+        })
 }
 
 
@@ -163,7 +196,7 @@ exports.postLogin = (req, res, next) => {
             bcrypt.compare(password, user.password)
                 .then(isSame => {
                     if (!isSame) {
-                        console.log('wrong password')
+                        throw new Error('No user found')
                     }
                     const token = jwt.sign({
                         email: user.email,
@@ -185,7 +218,7 @@ exports.postLogout = (req, res, next) => {
 
 exports.getPosts = (req, res, next) => {
     let page = +req.query.page
-    let perPage = 2
+    let perPage = 7
     let totalItems
 
     Post.find().countDocuments()
@@ -233,27 +266,19 @@ exports.addPost = (req, res, next) => {
                     let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
 
                     let newResult = { ...result, createdAt: formattedDate }
-                    // .on('connection' ,(socket) => {
-                    // sock.getIO().emit('contents', msg => {
-                    //     console.log(msg)
+                  
                     sock.getIO().emit('message', { post: newResult })
-                    // })
-                    // })
-                    // req.io.on('connection', socket => {
-                    //     socket.on('contents', msg => {
-
-                    //         req.io.emit('message', {text : msg, user : ourUser})
-
-
-                    //     })
-                    // })
-
+                    
+                    
                     res.status(200).json({ message: 'Post added Successfully' })
                 })
 
 
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            const error = new Error(err);
+            return next(error);
+        })
 
 
 
@@ -283,11 +308,12 @@ exports.deletePost = (req, res, next) => {
         // console.log(req.userId)
         .then(result => {
             sock.getIO().emit('deleteMessage', { deletedPost: postData })
-            console.log('deleted product')
+        
             res.status(200).json({ message: 'Product deleted' })
         })
         .catch(err => {
-            console.log(err)
+            const error = new Error(err);
+            return next(error);
         })
 }
 
@@ -318,7 +344,8 @@ exports.deleteRecord = (req, res, next) => {
             res.status(200).json({ message: 'Product deleted' })
         })
         .catch(err => {
-            console.log(err)
+            const error = new Error(err);
+            return next(error);
         })
 }
 

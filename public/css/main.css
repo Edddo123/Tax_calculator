@@ -58,6 +58,14 @@ a {
 #links {
     padding-top: 30px;
 }
+#Logout {
+    background: none;
+    cursor: pointer;
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 8px;
+}
 
 a:hover {
     background-color: rgba(225, 233, 232);

@@ -3,7 +3,7 @@ const form = document.getElementById('feedForm')
 const content = document.getElementById('content')
 const next = document.getElementById('next')
 const prev = document.getElementById('prev')
-
+const logoutBtn = document.getElementById('Logout')
 
 form.addEventListener('submit', addPost)
 // form.addEventListener('submit', getSocket)
@@ -13,6 +13,10 @@ let page = 1
 next.addEventListener('click', goNext)
 prev.addEventListener('click', goPrev)
 
+logoutBtn.addEventListener('click', logMeOut)
+function logMeOut() {
+    localStorage.removeItem("jwt");
+}
 
 const socket = io()
 

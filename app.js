@@ -6,16 +6,8 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const formRoutes = require('./routes/form')
 const db = require('./db')
-// const socketIo = require('socket.io')
-const app = express()
-// const server = http.createServer(app)
-// const io = socketIo(server)
 
-// app.use((req, res, next) => {
-    
-//     req.io = io
-//     next()
-// })
+const app = express()
 
 
 
@@ -36,6 +28,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 app.use(formRoutes)
+
+app.use((err, req, res, next) => {
+  res.status(500).render('500', {
+    
+  });
+})
 
 mongoose.connect(
     db.mongoURI

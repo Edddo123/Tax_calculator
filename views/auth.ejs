@@ -22,26 +22,42 @@
                 <li><a href="http://localhost:3000/getLogin">Login </a></li>
                 <li><a href="http://localhost:3000/getSign">Signup </a></li>
                 <form action="http://localhost:3000/postLogout" method="POST">
-                    <button type="submit" id="Logout"> <li>Logout</li> </button>
-                     </form>
+                    <button type="submit" id="Logout">
+                        <li id="listLog">Logout</li>
+                    </button>
+                </form>
             </ul>
         </div>
 
     </header>
     <main>
         <form action="http://localhost:3000/postSignup" method="POST">
-           
-            <label for="username">Username</label>
-            <div> <input type="text" id="username" name="username"> </div>
-          
-            <label for="email">Email</label>
-            <div> <input type="email" id="email" name="email"> </div>
-            <label for="password">password</label>
-            <div> <input type="password" id="password" name="password"> </div>
 
-            <button type="submit" class="btn"><h3> Sign up </h3></button>
+            <% if (errorMessage) { %>
+                <div><%= errorMessage %></div>
+            <% } %>
+
+            <label for="username">Username</label>
+            <div> <input type="text" id="username" name="username" value="<%=oldInput.name%>"> </div>
+
+            <label for="email">Email</label>
+            <div> <input type="email" id="email" name="email" value="<%=oldInput.email%>"> </div>
+            <label for="password">password</label>
+            <div> <input type="password" id="password" name="password" value="<%=oldInput.password%>"> </div>
+
+            <button type="submit" class="btn">
+                <h3> Sign up </h3>
+            </button>
+
         </form>
     </main>
+    <script>
+        const logoutBtn = document.getElementById('Logout')
+        logoutBtn.addEventListener('click', logMeOut)
+        function logMeOut() {
+            localStorage.removeItem("jwt");
+        }
+    </script>
 </body>
 
 </html>

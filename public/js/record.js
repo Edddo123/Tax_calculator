@@ -1,11 +1,17 @@
 const next = document.getElementById('next')
 const prev = document.getElementById('prev')
 const container = document.getElementById('recordContainer')
+const logoutBtn = document.getElementById('Logout')
 
 let page = 1
 
 next.addEventListener('click', goNext)
 prev.addEventListener('click', goPrev)
+
+logoutBtn.addEventListener('click', logMeOut)
+function logMeOut() {
+    localStorage.removeItem("jwt");
+}
 
 function goNext() {
     page++

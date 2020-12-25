@@ -10,6 +10,14 @@ body {
 #recordVATForm {
     display: none;
 }
+#Logout {
+    background: none;
+    cursor: pointer;
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 8px;
+}
 
 #person {
     display: none;

@@ -248,7 +248,7 @@ submitVAT.addEventListener('submit', (e) => {
                     })
                         .then(data => data.json())
                         .then(result => {
-                          console.log('we get here?')
+                        //   console.log('we get here?')
                             window.location.replace('http://localhost:3000/getLogin')
                         })
     

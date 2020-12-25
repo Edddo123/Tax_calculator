@@ -1,5 +1,6 @@
 const express = require('express')
 const isAuth = require('../middleware/isAuth')
+const { body } = require('express-validator');
 
 const router = express.Router()
 
@@ -27,7 +28,14 @@ router.get('/getLogin', formController.getLogin)
 router.post('/postLogout', formController.postLogout)
 
 
-router.post('/postSignup', formController.postSignup)
+router.post('/postSignup',[
+    body('email', 'invalid email').isEmail().trim(),
+    body('username').isString().isLength({ min: 5 }),
+    body('password', 'password has to be at least 5 char long').isLength({ min: 5 })
+    .isAlphanumeric()
+    .trim()
+
+], formController.postSignup)
 
 router.post('/postLogin', formController.postLogin)
 

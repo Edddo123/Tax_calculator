@@ -22,6 +22,16 @@ a {
     font-size: 20px;
     font-weight: 700;
 }
+#Logout {
+    background: none;
+    cursor: pointer;
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+
 
 #links {
     padding-top: 30px;
