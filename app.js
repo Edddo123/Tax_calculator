@@ -15,7 +15,7 @@ const app = express()
 
 
 
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
@@ -31,20 +31,20 @@ app.use(formRoutes)
 
 app.use((err, req, res, next) => {
   res.status(500).render('500', {
-    
+
   });
 })
 
 mongoose.connect(
-    db.mongoURI
+  db.mongoURI
 )
-.then(result =>{
-  const server =  app.listen(3000)
- const io = require('./socket').init(server)  
+  .then(result => {
+    const server = app.listen(3000)
+    const io = require('./socket').init(server)
 
- 
-})
-.catch(err=> console.log(err))
+
+  })
+  .catch(err => console.log(err))
 
 
 

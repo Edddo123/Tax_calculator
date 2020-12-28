@@ -67,6 +67,7 @@ exports.postRecordsVAT = (req, res, next) => {
 }
 
 exports.postRecordsInc = (req, res, next) => {
+    // const {taxType, pensionTax} = req.body descturcturing gamoiyene
     const taxType = req.body.taxType
     const pensionTax = +req.body.pensionTax
     const incomeTax = +req.body.incomeTax
