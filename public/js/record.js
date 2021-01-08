@@ -13,23 +13,24 @@ function logMeOut() {
     localStorage.removeItem("jwt");
 }
 
-function goNext() {
+async function goNext() {
     page++
-    fetch('http://localhost:3000/records?page=' + page, {
-        headers : {
+    try {
+   const result = await fetch('http://localhost:3000/records?page=' + page, {
+        headers: {
             "Authorization": 'Bearer ' + localStorage.getItem("jwt")
         }
     })
-    .then(result=> result.json())
-    .then(data => {
-        container.innerHTML = "";
-        let taxAm = {taxAmount : "Tax Types"};
-        console.log(data)
-        for (let i=0; i<data.perPage; i++) {
-            for (let obj in data.data[i]._doc.Tax_Amount) {
-                taxAm.taxAmount += `<li>${obj} : ${data.data[i]._doc.Tax_Amount[obj].toFixed(2)}</li>`
-            }
-            container.innerHTML += `<ul class="record">
+        const data = await result.json()
+     
+            container.innerHTML = "";
+            let taxAm = { taxAmount: "Tax Types" };
+            console.log(data)
+            for (let i = 0; i < data.perPage; i++) {
+                for (let obj in data.data[i]._doc.Tax_Amount) {
+                    taxAm.taxAmount += `<li>${obj} : ${data.data[i]._doc.Tax_Amount[obj].toFixed(2)}</li>`
+                }
+                container.innerHTML += `<ul class="record">
             <li> Tax : ${data.data[i]._doc.Tax_Type}
             </li>
            
@@ -45,35 +46,34 @@ function goNext() {
                         id="${data.data[i]._doc._id}M">
                     <button type="button" onclick="deleteRecord(this)" class="btn">Delete</button>
         </ul>`
-        taxAm.taxAmount = "Tax Types";
-        }
-        
+                taxAm.taxAmount = "Tax Types";
+            }
 
-          
-        }) 
-        .catch(err => console.log(err))
 
-  
+
+      
+        } catch(err){ console.log(err)}
+
+
 }
 
-function goPrev() {
-    if(page > 1) {
+async function goPrev() {
+    if (page > 1) {
         page--
     }
     else page = 1
-    
-  
-    fetch('http://localhost:3000/records?page=' + page, {
-        headers : {
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        }
-    })
-    .then(result=> result.json())
-    .then(data => {
+    try {
+
+        const result = await fetch('http://localhost:3000/records?page=' + page, {
+            headers: {
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            }
+        })
+        const data = await result.json()
         container.innerHTML = "";
-        let taxAm = {taxAmount : "Tax Types"};
+        let taxAm = { taxAmount: "Tax Types" };
         console.log(data)
-        for (let i=0; i<data.perPage; i++) {
+        for (let i = 0; i < data.perPage; i++) {
             for (let obj in data.data[i]._doc.Tax_Amount) {
                 taxAm.taxAmount += `<li>${obj} : ${data.data[i]._doc.Tax_Amount[obj].toFixed(2)}</li>`
             }
@@ -93,15 +93,13 @@ function goPrev() {
                         id="${data.data[i]._doc._id}M">
                     <button type="button" onclick="deleteRecord(this)" class="btn">Delete</button>
         </ul>`
-        taxAm.taxAmount = "Tax Types";
+            taxAm.taxAmount = "Tax Types";
         }
-        
 
-          
-        }) 
-        .catch(err => console.log(err))
+    } catch (err) {
+        console.log(err)
+    }
 
-    
 }
 
 
@@ -109,24 +107,23 @@ function goPrev() {
 
 
 
-const deleteRecord = (btn) => {
+const deleteRecord = async (btn) => {
     const recordId = btn.parentNode.querySelector('[name=recordId]').value
     const recordElement = btn.closest('ul')
-   
+    try {
+        const result = await fetch('http://localhost:3000/deleteRecord/' + recordId, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            }
+        })
+        await result.json()
 
-    fetch('http://localhost:3000/deleteRecord/' + recordId, {
-        method: 'DELETE',
-        headers : {
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        }
-    })
-    .then(result => result.json())
-    .then(data=> {
         console.log('we are here boiz')
         recordElement.remove()
-    })
-    .catch(err=> {
+
+    } catch (err) {
         console.log(err)
-    })
+    }
 
 }

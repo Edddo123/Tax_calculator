@@ -38,7 +38,7 @@
             <% for(let obj in record._doc.Tax_Amount) { %>
 
                 <li>
-                    <%=obj%> : <%=record._doc.Tax_Amount[obj].toFixed(2)%>
+                    <%=obj%> : <%=record._doc.Tax_Amount[obj]%>
                 </li>
 
                 <%}%>

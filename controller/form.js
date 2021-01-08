@@ -47,7 +47,7 @@ exports.totalVAT = (req, res, next) => {
     res.status(200).json({ totalVAT, taxType })
 }
 
-exports.postRecordsVAT = (req, res, next) => {
+exports.postRecordsVAT = async (req, res, next) => {
     const taxType = req.body.taxType
     const totalVAT = +req.body.totalVAT
     const newRecord = new Record({
@@ -55,72 +55,66 @@ exports.postRecordsVAT = (req, res, next) => {
         Tax_Amount: { totalVAT },
         user: req.userId
     })
-    newRecord.save()
-        .then(result => {
-            res.redirect('/records')
-        })
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+    try {
+        await newRecord.save()
+
+        res.redirect('/records')
+
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 
 }
 
-exports.postRecordsInc = (req, res, next) => {
-    // const {taxType, pensionTax} = req.body descturcturing gamoiyene
-    const taxType = req.body.taxType
-    const pensionTax = +req.body.pensionTax
-    const incomeTax = +req.body.incomeTax
-    const grossIncome = +req.body.grossIncome
+exports.postRecordsInc = async (req, res, next) => {
+    const { taxType, pensionTax, incomeTax, grossIncome } = req.body
     const newRecord = new Record({
         Tax_Type: taxType,
         Tax_Amount: { pensionTax, incomeTax, grossIncome },
         user: req.userId
     })
-    newRecord.save()
-        .then(result => {
-            res.status(200).json({ message: 'record posted' })
-        })
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+    try {
+        await newRecord.save()
+
+        res.status(200).json({ message: 'record posted' })
+
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 
 }
 
-exports.getRecords = (req, res, next) => {
+exports.getRecords = async (req, res, next) => {
+  
     let page = +req.query.page
     let perPage = 2
-    let totalItems
-    return Record.find({ user: req.userId }).countDocuments()
-        .then(count => {
-            totalItems = count
-            return Record.find({ user: req.userId }).skip((page - 1) * perPage).limit(perPage)
+    try {
+        const count = await Record.find({ user: req.userId }).countDocuments()
+        const data = await Record.find({ user: req.userId }).skip((page - 1) * perPage).limit(perPage)
+        let newData = data.map(x => {
+            let convertedDate = new Date(x.createdAt)
+            let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
+            return { ...x, createdAt: formattedDate }
         })
-        .then(data => {
+        
+        if (!page) {
+            console.log(newData)
+            res.render('records', {     
+                data: newData,
+                myTok: saveTok
+            })
+        } else {
+            
+            res.status(200).json({ data: newData, totalItems: count, perPage })
+        }
 
-            let newData = data.map(x => {
-                let convertedDate = new Date(x.createdAt)
-                let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}` //slice negative iwevs bolodan anu -2 aris bolodan meore wevri da tu marto start maq mashin end ad array lengths aigebs
-                return { ...x, createdAt: formattedDate }
-            }) //es mibrunebs objectebis arrays sadac shecvlili monacemi tavidanvea da _doc shi aris dzveli monacemebi
-            // ${convertedDate.getMinutes()<10?'0':''}${convertedDate.getMinutes()} anu tu 10ze naklebia 0s wers da mere minutes umatebs da gamodis
-
-            if (!page) {
-                res.render('records', {
-                    data: newData,
-                    myTok: saveTok
-                })
-            } else {
-
-
-                res.status(200).json({ data: newData, totalItems, perPage })
-            }
-        })
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+    } catch (err) {
+        console.log(err)
+        // const error = new Error(err);
+        // return next(error);
+    }
 }
 
 exports.getAuth = (req, res, next) => {
@@ -145,7 +139,7 @@ exports.getLogin = (req, res, next) => {
     })
 }
 
-exports.postSignup = (req, res, next) => {
+exports.postSignup = async (req, res, next) => {
     const name = req.body.username
     const email = req.body.email
     const password = req.body.password
@@ -163,52 +157,47 @@ exports.postSignup = (req, res, next) => {
             myTok: saveTok
         });
     }
-    return bcrypt.hash(password, 10)
-        .then(hashedPassword => {
-            const user = new User({
-                email,
-                name,
-                password: hashedPassword
-            })
-            user.save()
-                .then(user => {
-                    res.redirect('/getLogin')
-                })
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const user = new User({
+            email,
+            name,
+            password: hashedPassword
         })
+        await user.save()
+        res.redirect('/getLogin')
 
-
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 }
 
 
-exports.postLogin = (req, res, next) => {
+exports.postLogin = async (req, res, next) => {
 
     const email = req.body.email
     const password = req.body.password
-    User.findOne({ email: email })
-        .then(user => {
+    try {
+        const user = await User.findOne({ email: email })
+        if (!user) {
+            throw new Error('No user found')
+        }
+        const isSame = await bcrypt.compare(password, user.password)
+        if (!isSame) {
+            throw new Error('No user found')
+        }
+        const token = jwt.sign({
+            email: user.email,
+            userId: user._id.toString(),
+        }, 'secret', { expiresIn: '30min' })
 
-            if (!user) {
-                throw new Error('No user found')
-            }
-            bcrypt.compare(password, user.password)
-                .then(isSame => {
-                    if (!isSame) {
-                        throw new Error('No user found')
-                    }
-                    const token = jwt.sign({
-                        email: user.email,
-                        userId: user._id.toString(),
-                    }, 'secret', { expiresIn: '30min' })
+        res.status(200).json({ token: token, userId: user._id.toString() })
+        saveTok = token
 
-                    res.status(200).json({ token: token, userId: user._id.toString() })
-                    saveTok = token
-                })
-                .catch(err => console.log(err))
-        })
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 exports.postLogout = (req, res, next) => {
@@ -217,136 +206,112 @@ exports.postLogout = (req, res, next) => {
 }
 
 
-exports.getPosts = (req, res, next) => {
+exports.getPosts = async (req, res, next) => {
     let page = +req.query.page
     let perPage = 7
-    let totalItems
-
-    Post.find().countDocuments()
-        .then(count => {
-            totalItems = count
-            return Post.find().skip((page - 1) * perPage).limit(perPage)
+    try {
+        const count = await Post.find().countDocuments()
+        const data = await Post.find().skip((page - 1) * perPage).limit(perPage)
+        let newData = data.map(x => {
+            let convertedDate = new Date(x.createdAt)
+            let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}` //slice negative iwevs bolodan anu -2 aris bolodan meore wevri da tu marto start maq mashin end ad array lengths aigebs
+            return { ...x, createdAt: formattedDate }
         })
-        .then(data => {
-            let newData = data.map(x => {
-                let convertedDate = new Date(x.createdAt)
-                let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}` //slice negative iwevs bolodan anu -2 aris bolodan meore wevri da tu marto start maq mashin end ad array lengths aigebs
-                return { ...x, createdAt: formattedDate }
-
-
+        if (!page) {
+            res.render('feed', {
+                data: newData,
+                myTok: saveTok
             })
-            if (!page) {
-                res.render('feed', {
-                    data: newData,
-                    myTok: saveTok
-                })
-            } else {
-
-
-                res.status(200).json({ data: newData, totalItems, perPage })
-            }
-
-        })
+        } else {
+            res.status(200).json({ data: newData, totalItems: count, perPage })
+        }
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 }
 
 
-exports.addPost = (req, res, next) => {
-    let ourUser
-    const content = req.body.content
-    User.findById(req.userId)
-        .then(user => {
-            ourUser = user
-            const post = new Post({
-                creator: user.name,
-                content: content,
-                userId: req.userId
-            })
-            post.save()
-                .then(result => {
-                    let convertedDate = new Date(result.createdAt)
-                    let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
-
-                    let newResult = { ...result, createdAt: formattedDate }
-                  
-                    sock.getIO().emit('message', { post: newResult })
-                    
-                    
-                    res.status(200).json({ message: 'Post added Successfully' })
-                })
-
-
+exports.addPost = async (req, res, next) => {
+    try {
+        const content = req.body.content
+        const user = await User.findById(req.userId)
+        const post = new Post({
+            creator: user.name,
+            content: content,
+            userId: req.userId
         })
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+        const result = await post.save()
+
+        let convertedDate = new Date(result.createdAt)
+        let formattedDate = `${convertedDate.getDate()}/${convertedDate.getMonth()}/${convertedDate.getFullYear()}-${convertedDate.getHours()}:${('0' + convertedDate.getMinutes()).slice(-2)}`
+        let newResult = { ...result, createdAt: formattedDate }
+
+        sock.getIO().emit('message', { post: newResult })
+
+        res.status(200).json({ message: 'Post added Successfully' })
+
+
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 
 
 
 }
 
 
-exports.deletePost = (req, res, next) => {
-    let postData
-    const postId = req.params.postId
+exports.deletePost = async (req, res, next) => {
+    try {
+        const postId = req.params.postId
 
-    Post.findById(postId)
-        .then(post => {
-            postData = post
-            if (!post) {
-                const error = new Error('Could not find post.');
-                error.statusCode = 404;
-                throw error;
-            }
-            if (post.userId.toString() !== req.userId) {
-                const error = new Error('Not authorized!');
-                error.statusCode = 403;
-                throw error;
-            }
-            return Post.findByIdAndRemove(postId)
+        const post = await Post.findById(postId)
 
-        })
-        // console.log(req.userId)
-        .then(result => {
-            sock.getIO().emit('deleteMessage', { deletedPost: postData })
-        
-            res.status(200).json({ message: 'Product deleted' })
-        })
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+        if (!post) {
+            const error = new Error('Could not find post.');
+            error.statusCode = 404;
+            throw error;
+        }
+        if (post.userId.toString() !== req.userId) {
+            const error = new Error('Not authorized!');
+            error.statusCode = 403;
+            throw error;
+        }
+        await Post.findByIdAndRemove(postId)
+
+        sock.getIO().emit('deleteMessage', { deletedPost: post })
+
+        res.status(200).json({ message: 'Product deleted' })
+
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 }
 
-exports.deleteRecord = (req, res, next) => {
+exports.deleteRecord = async (req, res, next) => {
     let recordData
     const recordId = req.params.recordId
+    try {
+        const record = await Record.findById(recordId)
+        recordData = record
+        if (!record) {
+            const error = new Error('Could not find post.');
+            error.statusCode = 404;
+            throw error;
+        }
+        if (record.user.toString() !== req.userId) {
+            const error = new Error('Not authorized!');
+            error.statusCode = 403;
+            throw error;
+        }
+        await Record.findByIdAndRemove(recordId)
 
-    Record.findById(recordId)
-        .then(record => {
-            recordData = record
-            if (!record) {
-                const error = new Error('Could not find post.');
-                error.statusCode = 404;
-                throw error;
-            }
-            if (record.user.toString() !== req.userId) {
-                const error = new Error('Not authorized!');
-                error.statusCode = 403;
-                throw error;
-            }
-            return Record.findByIdAndRemove(recordId)
-
-        })
-        // console.log(req.userId)
-        .then(result => {
-
-            console.log('deleted product')
-            res.status(200).json({ message: 'Product deleted' })
-        })
-        .catch(err => {
-            const error = new Error(err);
-            return next(error);
-        })
+        res.status(200).json({ message: 'Product deleted' })
+    } catch (err) {
+        const error = new Error(err);
+        return next(error);
+    }
 }
 

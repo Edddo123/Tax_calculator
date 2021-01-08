@@ -6,7 +6,6 @@ const prev = document.getElementById('prev')
 const logoutBtn = document.getElementById('Logout')
 
 form.addEventListener('submit', addPost)
-// form.addEventListener('submit', getSocket)
 
 let page = 1
 
@@ -22,21 +21,22 @@ const socket = io()
 
 
 
-function goNext() {
+async function goNext() {
     const container = document.getElementById('postContainer')
     page++
-    fetch('http://localhost:3000/getPosts?page=' + page, {
-        headers : {
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        }
-    })
-    .then(result=> result.json())
-    .then(data => {
+    try {
+        const result = await fetch('http://localhost:3000/getPosts?page=' + page, {
+            headers: {
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            }
+        })
+        const data = await result.json()
+
         container.innerHTML = "";
-      
+
         console.log(data)
-        for (let i=0; i<data.perPage; i++) {
-            
+        for (let i = 0; i < data.perPage; i++) {
+
             container.innerHTML += `<ul class="record" style="border: 2px solid;">
             <li> Posted By : ${data.data[i]._doc.creator} , at:${data.data[i].createdAt}
             </li>
@@ -49,35 +49,30 @@ function goNext() {
             <button type="button" onclick="deleteProduct(this)" class="btn">Delete</button>
         </ul>`
         }
-        
 
-          
-        }) 
-        .catch(err => console.log(err))
+    } catch (err) { console.log(err) }
 
-  
+
 }
 
-function goPrev() {
+async function goPrev() {
 
-    if(page > 1) {
+    if (page > 1) {
         page--
     }
     else page = 1
     const container = document.getElementById('postContainer')
-    
-    fetch('http://localhost:3000/getPosts?page=' + page, {
-        headers : {
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        }
-    })
-    .then(result=> result.json())
-    .then(data => {
+    try {
+        const result = await fetch('http://localhost:3000/getPosts?page=' + page, {
+            headers: {
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            }
+        })
+        const data = await result.json()
         container.innerHTML = "";
-      
-        console.log(data)
-        for (let i=0; i<data.perPage; i++) {
-            
+
+        for (let i = 0; i < data.perPage; i++) {
+
             container.innerHTML += `<ul class="record" style="border: 2px solid;">
             <li> Posted By : ${data.data[i]._doc.creator} , at:${data.data[i].createdAt}
             </li>
@@ -90,13 +85,10 @@ function goPrev() {
             <button type="button" onclick="deleteProduct(this)" class="btn">Delete</button>
         </ul>`
         }
-        
 
-          
-        }) 
-        .catch(err => console.log(err))
+    } catch (err) { console.log(err) }
 
-  
+
 }
 
 socket.on('message', result => {
@@ -122,21 +114,21 @@ socket.on('deleteMessage', result => {
     // console.log(result)
     const hidden = document.getElementsByClassName('hidden')
     const arrayForValues = []
-    for(myObj in hidden) {
-        if(hidden[myObj]) {
+    for (myObj in hidden) {
+        if (hidden[myObj]) {
             arrayForValues.push(hidden[myObj])
         }
     }
-    let reformedArray = arrayForValues.filter(p=> {
+    let reformedArray = arrayForValues.filter(p => {
         return p.value === result.deletedPost._id
     })
-    
+
     const deletedInput = document.getElementById(`${reformedArray[0].value}M`)
-    if(deletedInput) {
+    if (deletedInput) {
         const parentElem = deletedInput.closest('ul')
         parentElem.remove()
     }
-   
+
 
 })
 
@@ -144,51 +136,46 @@ socket.on('deleteMessage', result => {
 
 
 
-function addPost(e) {
+async function addPost(e) {
     e.preventDefault()
     let postCont = content.value
-
-    fetch('http://localhost:3000/addPost', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        },
-        body: JSON.stringify({
-            content: postCont
+    try {
+        const result = await fetch('http://localhost:3000/addPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            },
+            body: JSON.stringify({
+                content: postCont
+            })
         })
-
-    })
-        .then(res => {
-            res.json()
-        })
-        .then(message => {
-
-            // window.location.replace('http://localhost:3000/getPosts')
-        })
+        await result.json()
+    } catch (err) {
+        console.log(err)
+    }
 
 }
 
 
-const deleteProduct = (btn) => {
+const deleteProduct = async (btn) => {
     const postId = btn.parentNode.querySelector('[name=postId]').value
     const postElement = btn.closest('ul')
-   
+    try {
+        const result = await fetch('http://localhost:3000/deletePost/' + postId, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            }
+        })
+        await result.json()
 
-    fetch('http://localhost:3000/deletePost/' + postId, {
-        method: 'DELETE',
-        headers : {
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        }
-    })
-    .then(result => result.json())
-    .then(data=> {
         console.log('we are here boiz')
         postElement.remove()
-    })
-    .catch(err=> {
+
+    } catch (err) {
         console.log(err)
-    })
+    }
 
 }
 

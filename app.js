@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(formRoutes)
 
 app.use((err, req, res, next) => {
+  // console.log(err)
   res.status(500).render('500', {
 
   });
@@ -37,7 +38,7 @@ app.use((err, req, res, next) => {
 
 mongoose.connect(
   db.mongoURI
-)
+, { useNewUrlParser: true })
   .then(result => {
     const server = app.listen(3000)
     const io = require('./socket').init(server)

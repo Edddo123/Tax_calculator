@@ -24,7 +24,7 @@ function logMeOut() {
     localStorage.removeItem("jwt");
 }
 
-submitForm.addEventListener('submit', (e) => {
+submitForm.addEventListener('submit', async (e) => {
     let taxType = "Income Tax"
     let dropDown = document.getElementById('residence').value
     let statusRadio
@@ -44,80 +44,72 @@ submitForm.addEventListener('submit', (e) => {
     }
     e.stopPropagation()
     e.preventDefault()
-    fetch('http://localhost:3000/persnInc', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        },
-        //its same as dropDown : dropDown
-        body: JSON.stringify({
-            dropDown,
-            statusRadio,
-            totIncome,
-            benefits,
-            taxType
+    try {
+        const result = await fetch('http://localhost:3000/persnInc', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            },
+            //its same as dropDown : dropDown
+            body: JSON.stringify({
+                dropDown,
+                statusRadio,
+                totIncome,
+                benefits,
+                taxType
+            })
         })
-    })
-        .then(result => result.json())
-        .then(data => {
-            let newDiv = document.createElement('div')
-            newDiv.setAttribute('id', 'finalResult')
-            newDiv.innerHTML = `
+        const data = await result.json()
+        let newDiv = document.createElement('div')
+        newDiv.setAttribute('id', 'finalResult')
+        newDiv.innerHTML = `
         <p>Your gross income is ${data.grossIncome}</p>
         <p>Your income tax is ${data.incomeTax}</p>
         <p>Your Pension fee is ${data.pensionTax}</p>
         `;
-            mainChoice.appendChild(newDiv)
-           
+        mainChoice.appendChild(newDiv)
 
+        finalRes = document.getElementById('finalResult');
+        personIncome.style.display = "none"
+        document.getElementById('recordIncForm').style.display = 'block'
 
-
-
-
-            finalRes = document.getElementById('finalResult');
-            personIncome.style.display = "none"
-            document.getElementById('recordIncForm').style.display = 'block'
-
-            document.getElementById('tryForm').addEventListener('submit', (e) => {
-                e.preventDefault()
-                document.getElementById('taxType').setAttribute('value', data.taxType)
-                document.getElementById('pensionTax').setAttribute('value', data.pensionTax)
-                document.getElementById('incomeTax').setAttribute('value', data.incomeTax)
-                document.getElementById('grossIncome').setAttribute('value', data.grossIncome)
-                const taxType =  document.getElementById('taxType').value
-                const pensionTax =  document.getElementById('pensionTax').value
-                const incomeTax =  document.getElementById('incomeTax').value
-                const grossIncome =  document.getElementById('grossIncome').value
-                fetch('http://localhost:3000/recordsInc', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-                    },
-                    body: JSON.stringify({
-                        taxType,
-                        pensionTax,
-                        incomeTax,
-                        grossIncome
-                    })
+        document.getElementById('tryForm').addEventListener('submit', async(e) => {
+            e.preventDefault()
+            document.getElementById('taxType').setAttribute('value', data.taxType)
+            document.getElementById('pensionTax').setAttribute('value', data.pensionTax)
+            document.getElementById('incomeTax').setAttribute('value', data.incomeTax)
+            document.getElementById('grossIncome').setAttribute('value', data.grossIncome)
+            const taxType = document.getElementById('taxType').value
+            const pensionTax = document.getElementById('pensionTax').value
+            const incomeTax = document.getElementById('incomeTax').value
+            const grossIncome = document.getElementById('grossIncome').value
+            const result = await fetch('http://localhost:3000/recordsInc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+                },
+                body: JSON.stringify({
+                    taxType,
+                    pensionTax,
+                    incomeTax,
+                    grossIncome
                 })
-                    .then(data => data.json())
-                    .then(result => {
-                        console.log('we reached here')
-                        console.log('it came back')
-                        window.location.replace('http://localhost:3000/getLogin')
-                    })
-
             })
+            await result.json()
+            window.location.replace('http://localhost:3000/getLogin')
+
+
         })
-        .catch(err => console.log(err))
+
+    } catch (err) { console.log(err) }
 })
 
 personBtn.addEventListener('click', () => {
     person.style.display = "block"
     corporation.style.display = "none"
-   
+
 })
 corpBtn.addEventListener('click', () => {
     corporation.style.display = "block"
@@ -175,88 +167,85 @@ corpVATBtn.addEventListener('click', (e) => {
     personIncome.style.display = "none"
     document.getElementById('recordIncForm').style.display = 'none'
     document.getElementById('recordVATForm').style.display = 'none'
-    
+
 
     if (finalVAT) {
         finalVAT.remove()
     }
 })
 
-submitVAT.addEventListener('submit', (e) => {
+submitVAT.addEventListener('submit', async (e) => {
 
     let totalSales = document.getElementById('totVAT1').value
     let taxType = "VAT"
     e.preventDefault()
-    fetch('http://localhost:3000/totalVAT', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-        },
-        body: JSON.stringify({
-            totalSales,
-            taxType
-        })
+    try {
+        const result = await fetch('http://localhost:3000/totalVAT', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+            },
+            body: JSON.stringify({
+                totalSales,
+                taxType
+            })
 
-    })
-        .then(result => result.json())
-        .then(data => {
-            
-            if (data.messageVAT) {
-                let newDiv = document.createElement('div')
-                newDiv.setAttribute('id', 'noVAT')
-                newDiv.innerHTML = `${data.messageVAT}`
-                mainChoice.appendChild(newDiv)
-                finalVAT = document.getElementById('noVAT');
-                personIncome.style.display = "none"
-                bothVAT.style.display = 'none'
-                document.getElementById('recordVATForm').style.display = 'none'
-            }
-            else {
-                let newDiv = document.createElement('div')
-                newDiv.setAttribute('id', 'finalVAT')
-                newDiv.innerHTML = `
+        })
+        const data = await result.json()
+
+        if (data.messageVAT) {
+            let newDiv = document.createElement('div')
+            newDiv.setAttribute('id', 'noVAT')
+            newDiv.innerHTML = `${data.messageVAT}`
+            mainChoice.appendChild(newDiv)
+            finalVAT = document.getElementById('noVAT');
+            personIncome.style.display = "none"
+            bothVAT.style.display = 'none'
+            document.getElementById('recordVATForm').style.display = 'none'
+        }
+        else {
+            let newDiv = document.createElement('div')
+            newDiv.setAttribute('id', 'finalVAT')
+            newDiv.innerHTML = `
         <p>Your VAT payable is ${data.totalVAT}</p>
         
         `;
 
-                mainChoice.appendChild(newDiv)
+            mainChoice.appendChild(newDiv)
 
-                finalVAT = document.getElementById('finalVAT');
-                personIncome.style.display = "none"
-                bothVAT.style.display = 'none'
-                document.getElementById('recordVATForm').style.display = 'block'
+            finalVAT = document.getElementById('finalVAT');
+            personIncome.style.display = "none"
+            bothVAT.style.display = 'none'
+            document.getElementById('recordVATForm').style.display = 'block'
 
-                document.getElementById('tryFormVAT').addEventListener('submit', (e) => {
-                    e.preventDefault()
-                    document.getElementById('taxType').setAttribute('value', data.taxType)
-                    document.getElementById('totalVAT').setAttribute('value', data.totalVAT)
-                    const taxType =  document.getElementById('taxType').value
-                    const totalVAT =  document.getElementById('totalVAT').value
-                    
-                 return   fetch('http://localhost:3000/recordsVAT', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "Authorization": 'Bearer ' + localStorage.getItem("jwt")
-                        },
-                        body: JSON.stringify({
-                            taxType,
-                            totalVAT
-                            
-                        })
+            document.getElementById('tryFormVAT').addEventListener('submit', async(e) => {
+                e.preventDefault()
+                document.getElementById('taxType').setAttribute('value', data.taxType)
+                document.getElementById('totalVAT').setAttribute('value', data.totalVAT)
+                const taxType = document.getElementById('taxType').value
+                const totalVAT = document.getElementById('totalVAT').value
+
+                const result = await fetch('http://localhost:3000/recordsVAT', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+                    },
+                    body: JSON.stringify({
+                        taxType,
+                        totalVAT
+
                     })
-                        .then(data => data.json())
-                        .then(result => {
-                        //   console.log('we get here?')
-                            window.location.replace('http://localhost:3000/getLogin')
-                        })
-    
                 })
+                await result.json()
+                window.location.replace('http://localhost:3000/getLogin')
 
-            }
-        })
-        .catch(err => console.log(err))
+            })
+
+        }
+
+    } catch (err) { console.log(err) }
 })
 
 
