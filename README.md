@@ -1,2 +1,3 @@
 # Tax_calculator
 Project to create fullstack application
+Its fullstack project with different features. In this repo I am planning to create same or improved projects based on different technologies I learn, so that I apply it as practical knowledge and also test which implementation is better and scalable. At this point in time first version of project is built with express, js, Mongodb. Next I will be adding nearly same implemntation but with typescript and PostgreSQL database.
