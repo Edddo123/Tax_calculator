@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="/css/auth.css">
+    <%- include('./includes/navbarStyle.ejs') %>
+</head>
+<body>
+ <header>
+    <%- include('./includes/navbar.ejs') %>
+ </header>
+ <main>
+  <div class="loginBox">
+   <h2>Sign Up</h2>
+   
+  <form>
+   <p>Username</p>
+   	<input type="text" name="fname" placeholder="Username">
+   <p>E-mail Address</p>
+   	<input type="email" name="email" placeholder="e-mail">
+   <p>Password<p>
+	<input type="Password" name="pword1" placeholder="Create Password">
+   <p>Re-enter Password</p>
+	<input type="password" name="pword2" Placeholder="Confirm Password">
+   	<input type="Submit" name="sbmt">
+  
+  <p>Already have an account? <a href="/login">Log in</a></p>
+  </form>
+  </div>
+ </main>
+</body>
+</html>

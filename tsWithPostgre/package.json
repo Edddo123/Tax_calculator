@@ -6,6 +6,10 @@
   "scripts": {
     "startDev": "nodemon dist/app.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Edddo123/Tax_calculator.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

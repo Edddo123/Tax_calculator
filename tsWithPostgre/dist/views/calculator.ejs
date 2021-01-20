@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/calculator.css" />
+    <%- include('./includes/navbarStyle.ejs') %>
+  </head>
+
+  <body>
+    <header><%- include('./includes/navbar.ejs') %></header>
+    <main>
+      <div class="loginBox">
+        <h2>Tax Calculator</h2>
+
+        <form>
+          <p>Who are you?</p>
+          <button id="personButton">Person</button>
+          <button id="corporationButton">Corporation</button>
+          <div id="personTaxes">
+            <p>Which Tax would you like to calculate?</p>
+            <button id="incomeButton">Income Tax</button>
+            <button id="VATButton">VAT</button>
+          </div>
+          <div id="corpTaxes">
+            <p>Which Tax would you like to calculate?</p>
+            <button>Profit Tax</button>
+            <button id="corpVATButton">VAT</button>
+          </div>
+          <div id="personIncome">
+            <p>Choose your employment status :</p>
+            <select name="residence" id="residence">
+              <option value="resident">Resident</option>
+              <option value="non-resident">Non-resident</option>
+              <option value="other">Other</option>
+            </select>
+            <p>Choose your employment status :</p>
+            <select name="employment" id="employment">
+              <option value="employed">employed</option>
+              <option value="self-employed">self-employed</option>
+              <option value="other">Other</option>
+            </select>
+
+            <p>Do you have any special benefits?</p>
+            <select name="benefits" id="benefits">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+
+            <p>What was your total income for the month(on hand)?</p>
+            <input
+              type="number"
+              name="totalIncome"
+              placeholder="Enter your income"
+              id="totalIncome"
+            />
+            <input type="Submit" name="sbmt" value="Submit" id="incomeSubmit"/>
+          </div>
+          <div id="personVAT">
+            <%- include('./includes/VAT.ejs') %>
+            <input type="Submit" name="sbmt" value="Submit" id="personVATSubmit"/>
+          </div>
+          <div id="corpVAT">
+            <%- include('./includes/VAT.ejs') %>
+            <input type="Submit" name="sbmt" value="Submit" id="corpVATSubmit"/>
+          </div>
+          <div id="response"></div>
+         
+         
+        </form>
+      </div>
+    </main>
+    <script defer src="/js/calculator.js"></script>
+  </body>
+</html>
