@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {getSignUp, getLogIn, getCalculator, postCalculator, getPersonVAT, getCorpVAT} from '../controllers/Formcontroller'
+import {getSignUp, getLogIn, getCalculator, postCalculator, getPersonVAT, getCorpVAT, getRecords, addPersVAT, addCorpVAT, addIncome} from '../controllers/Formcontroller'
 
 const router = express.Router()
 
@@ -12,9 +12,18 @@ router.get('/calculator', getCalculator)
 
 router.post("/postIncomeCalculator", postCalculator)
 
-router.post('/PersonVAT', getPersonVAT)
+router.post('/personVAT', getPersonVAT)
 
-router.post('/CorpVAT', getCorpVAT)
+router.post('/corpVAT', getCorpVAT)
+
+router.get('/records', getRecords)
+
+router.post('/personVATRecord', addPersVAT)
+
+router.post('/corpVATRecord', addCorpVAT)
+
+router.post('/incomeRecord', addIncome)
+
 
 
 

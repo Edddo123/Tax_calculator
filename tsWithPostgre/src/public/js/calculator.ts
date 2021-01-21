@@ -1,5 +1,3 @@
-
-
 const personButton = document.getElementById(
   "personButton"
 )! as HTMLButtonElement;
@@ -26,11 +24,14 @@ const corpVAT = document.getElementById("corpVAT")! as HTMLDivElement;
 const incomeSubmit = document.getElementById(
   "incomeSubmit"
 )! as HTMLButtonElement;
-const personVATSubmit = document.getElementById('personVATSubmit') as HTMLButtonElement
-const corpVATSubmit = document.getElementById('corpVATSubmit') as HTMLButtonElement
+const personVATSubmit = document.getElementById(
+  "personVATSubmit"
+) as HTMLButtonElement;
+const corpVATSubmit = document.getElementById(
+  "corpVATSubmit"
+) as HTMLButtonElement;
 
 const response = document.getElementById("response") as HTMLDivElement;
-
 
 personButton.addEventListener("click", clickPerson);
 corpButton.addEventListener("click", clickCorp);
@@ -40,7 +41,7 @@ corpVATButton.addEventListener("click", VATCorp);
 
 incomeSubmit.addEventListener("click", getIncome);
 personVATSubmit.addEventListener("click", getPersonVAT);
-corpVATSubmit.addEventListener("click", getCorpVAT)
+corpVATSubmit.addEventListener("click", getCorpVAT);
 
 function clickPerson(e: Event) {
   e.preventDefault();
@@ -106,43 +107,126 @@ async function getIncome(e: Event) {
     <p>Your income tax is ${data.response.incomeTax}</p>
     <p>Your pension tax is ${data.response.pensionTax}</p>
     <p>Tax type is ${data.response.taxType}</p>
+    <input
+    type="Submit"
+    name="sbmt"
+    value="Add To Records"
+    id="incomeRecord"
+  />
     `;
+    const incomeRecord = document.getElementById(
+      "incomeRecord"
+    )! as HTMLButtonElement;
+    incomeRecord.addEventListener("click", addIncome);
+    async function addIncome(e: Event) {
+      e.preventDefault();
+      const resultRecord = await fetch("http://localhost:3001/incomeRecord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taxableIncome: data.response }),
+      })
+      const dataRecord = await resultRecord.json();
+      console.log(data.response)
+    }
   } catch (err) {
-    console.log("there is sth wrong");
+    console.log(err, 'income failed');
   }
 }
 
-async function getPersonVAT(e:Event) {
-    e.preventDefault()
-    const VATSales = document.getElementById("VATSales") as HTMLInputElement
-    const result = await fetch("http://localhost:3001/PersonVAT", {
+async function getPersonVAT(e: Event) {
+  e.preventDefault();
+  const taxType = 'VAT'
+  const VATSales = document.getElementById("VATSales") as HTMLInputElement;
+  try {
+  const result = await fetch("http://localhost:3001/personVAT", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sales: VATSales.value,
+    }),
+  });
+  const data = await result.json();
+  const VATpayable = data.response.response || data.response.message
+  response.innerHTML = "";
+  response.innerHTML = `<p>${VATpayable}</p>
+    <input
+    type="Submit"
+    name="sbmt"
+    value="Add To Records"
+    id="personVATRecord"
+  />
+    `;
+
+  const personVATRecord = document.getElementById(
+    "personVATRecord"
+  )! as HTMLButtonElement;
+  personVATRecord.addEventListener("click", addPersVAT);
+  async function addPersVAT(e: Event) {
+    e.preventDefault();
+    const resultRecord = await fetch("http://localhost:3001/personVATRecord", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        sales : VATSales.value
-      }),
-    });
-    const data = await result.json();
-    response.innerHTML = "";
-    response.innerHTML = `<p>${data.response.response}</p>`
-    console.log(data)
+      body: JSON.stringify({ salesVAT: VATpayable , taxType}),
+    })
+    const dataRecord = await resultRecord.json();
+  }
+} catch(err) {
+  console.log(err, 'Person VAT failed')
+}
 }
 
-async function getCorpVAT(e:Event) {
-    e.preventDefault()
-    const VATSales = document.getElementById("VATSales") as HTMLInputElement
-    const result = await fetch("http://localhost:3001/CorpVAT", {
+async function getCorpVAT(e: Event) {
+  e.preventDefault();
+  const taxType = 'corpVAT'
+  const corpVATSales = document.getElementById(
+    "corpVATSales"
+  ) as HTMLInputElement;
+  const result = await fetch("http://localhost:3001/corpVAT", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sales: corpVATSales.value,
+    }),
+  });
+  try {
+  const data = await result.json();
+  const VATpayable = data.response.response || data.response.message
+  response.innerHTML = "";
+  response.innerHTML = `<p>Your VAT payable: ${VATpayable}</p>
+    <input
+    type="Submit"
+    name="sbmt"
+    value="Add To Records"
+    id="corpVATRecord"
+  />
+    `;
+
+  const corpVATRecord = document.getElementById(
+    "corpVATRecord"
+  )! as HTMLButtonElement;
+  corpVATRecord.addEventListener("click", addCorpVAT);
+
+  async function addCorpVAT(e: Event) {
+    e.preventDefault();
+    const resultRecord = await fetch("http://localhost:3001/corpVATRecord", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        sales : VATSales.value
-      }),
+      body: JSON.stringify({ salesVAT: VATpayable, taxType }),
     });
-    const data = await result.json();
-    response.innerHTML = "";
-    response.innerHTML = `<p>${data.response.response}</p>`
+    await resultRecord.json();
+    window.location.replace("http://localhost:3001/records");
+  }
+}catch(err) {
+  console.log(err, 'corpVAT failed')
+}
 }

@@ -19,8 +19,8 @@ const personVAT = document.getElementById("personVAT");
 const corpVATButton = document.getElementById("corpVATButton");
 const corpVAT = document.getElementById("corpVAT");
 const incomeSubmit = document.getElementById("incomeSubmit");
-const personVATSubmit = document.getElementById('personVATSubmit');
-const corpVATSubmit = document.getElementById('corpVATSubmit');
+const personVATSubmit = document.getElementById("personVATSubmit");
+const corpVATSubmit = document.getElementById("corpVATSubmit");
 const response = document.getElementById("response");
 personButton.addEventListener("click", clickPerson);
 corpButton.addEventListener("click", clickCorp);
@@ -87,47 +87,127 @@ function getIncome(e) {
     <p>Your income tax is ${data.response.incomeTax}</p>
     <p>Your pension tax is ${data.response.pensionTax}</p>
     <p>Tax type is ${data.response.taxType}</p>
+    <input
+    type="Submit"
+    name="sbmt"
+    value="Add To Records"
+    id="incomeRecord"
+  />
     `;
+            const incomeRecord = document.getElementById("incomeRecord");
+            incomeRecord.addEventListener("click", addIncome);
+            function addIncome(e) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    e.preventDefault();
+                    const resultRecord = yield fetch("http://localhost:3001/incomeRecord", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ taxableIncome: data.response }),
+                    });
+                    const dataRecord = yield resultRecord.json();
+                    console.log(data.response);
+                });
+            }
         }
         catch (err) {
-            console.log("there is sth wrong");
+            console.log(err, 'income failed');
         }
     });
 }
 function getPersonVAT(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
+        const taxType = 'VAT';
         const VATSales = document.getElementById("VATSales");
-        const result = yield fetch("http://localhost:3001/PersonVAT", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                sales: VATSales.value
-            }),
-        });
-        const data = yield result.json();
-        response.innerHTML = "";
-        response.innerHTML = `<p>${data.response.response}</p>`;
-        console.log(data);
+        try {
+            const result = yield fetch("http://localhost:3001/personVAT", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    sales: VATSales.value,
+                }),
+            });
+            const data = yield result.json();
+            const VATpayable = data.response.response || data.response.message;
+            response.innerHTML = "";
+            response.innerHTML = `<p>${VATpayable}</p>
+    <input
+    type="Submit"
+    name="sbmt"
+    value="Add To Records"
+    id="personVATRecord"
+  />
+    `;
+            const personVATRecord = document.getElementById("personVATRecord");
+            personVATRecord.addEventListener("click", addPersVAT);
+            function addPersVAT(e) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    e.preventDefault();
+                    const resultRecord = yield fetch("http://localhost:3001/personVATRecord", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ salesVAT: VATpayable, taxType }),
+                    });
+                    const dataRecord = yield resultRecord.json();
+                });
+            }
+        }
+        catch (err) {
+            console.log(err, 'Person VAT failed');
+        }
     });
 }
 function getCorpVAT(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
-        const VATSales = document.getElementById("VATSales");
-        const result = yield fetch("http://localhost:3001/CorpVAT", {
+        const taxType = 'corpVAT';
+        const corpVATSales = document.getElementById("corpVATSales");
+        const result = yield fetch("http://localhost:3001/corpVAT", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                sales: VATSales.value
+                sales: corpVATSales.value,
             }),
         });
-        const data = yield result.json();
-        response.innerHTML = "";
-        response.innerHTML = `<p>${data.response.response}</p>`;
+        try {
+            const data = yield result.json();
+            const VATpayable = data.response.response || data.response.message;
+            response.innerHTML = "";
+            response.innerHTML = `<p>Your VAT payable: ${VATpayable}</p>
+    <input
+    type="Submit"
+    name="sbmt"
+    value="Add To Records"
+    id="corpVATRecord"
+  />
+    `;
+            const corpVATRecord = document.getElementById("corpVATRecord");
+            corpVATRecord.addEventListener("click", addCorpVAT);
+            function addCorpVAT(e) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    e.preventDefault();
+                    const resultRecord = yield fetch("http://localhost:3001/corpVATRecord", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ salesVAT: VATpayable, taxType }),
+                    });
+                    yield resultRecord.json();
+                    window.location.replace("http://localhost:3001/records");
+                });
+            }
+        }
+        catch (err) {
+            console.log(err, 'corpVAT failed');
+        }
     });
 }

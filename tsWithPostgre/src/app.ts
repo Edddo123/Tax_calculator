@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path'
 import bodyParser from 'body-parser'
+import db from './util/db-setup'
 
 import formRoutes from './routes/form'
 
@@ -16,4 +17,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(formRoutes)
 
-app.listen(3001)
+db.connect()
+.then(()=> {
+    console.log('connected to database')
+    app.listen(3001)
+})
+.catch((err)=> {
+    console.log(err, 'system crashed')
+})
+

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const db_setup_1 = __importDefault(require("./util/db-setup"));
 const form_1 = __importDefault(require("./routes/form"));
 const app = express_1.default();
 app.set('view engine', 'ejs');
@@ -13,4 +14,11 @@ app.set('views', 'dist/views');
 app.use(body_parser_1.default.json());
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 app.use(form_1.default);
-app.listen(3001);
+db_setup_1.default.connect()
+    .then(() => {
+    console.log('connected to database');
+    app.listen(3001);
+})
+    .catch((err) => {
+    console.log(err, 'system crashed');
+});

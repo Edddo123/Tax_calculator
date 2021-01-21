@@ -15,9 +15,11 @@
         <h2>Tax Calculator</h2>
 
         <form>
-          <p>Who are you?</p>
-          <button id="personButton">Person</button>
-          <button id="corporationButton">Corporation</button>
+          <div>
+            <p>Who are you?</p>
+            <button id="personButton">Person</button>
+            <button id="corporationButton">Corporation</button>
+          </div>
           <div id="personTaxes">
             <p>Which Tax would you like to calculate?</p>
             <button id="incomeButton">Income Tax</button>
@@ -55,19 +57,39 @@
               placeholder="Enter your income"
               id="totalIncome"
             />
-            <input type="Submit" name="sbmt" value="Submit" id="incomeSubmit"/>
+            <input type="Submit" name="sbmt" value="Submit" id="incomeSubmit" />
           </div>
           <div id="personVAT">
-            <%- include('./includes/VAT.ejs') %>
-            <input type="Submit" name="sbmt" value="Submit" id="personVATSubmit"/>
+            <p>Whats your total sales for last 12 month?</p>
+            <input
+              type="number"
+              name="totalVAT"
+              placeholder="Enter your Sales"
+              id="VATSales"
+            />
+            <input
+              type="Submit"
+              name="sbmt"
+              value="Submit"
+              id="personVATSubmit"
+            />
           </div>
           <div id="corpVAT">
-            <%- include('./includes/VAT.ejs') %>
-            <input type="Submit" name="sbmt" value="Submit" id="corpVATSubmit"/>
+            <p>Whats your total sales for last 12 month?</p>
+            <input
+              type="number"
+              name="totalVAT"
+              placeholder="Enter your Sales"
+              id="corpVATSales"
+            />
+            <input
+              type="Submit"
+              name="sbmt"
+              value="Submit"
+              id="corpVATSubmit"
+            />
           </div>
           <div id="response"></div>
-         
-         
         </form>
       </div>
     </main>
