@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { incomeCalculation, VATCalculation } from "../util/taxCalculate";
 import db from "../util/db-setup";
+import RecordData from "../models/records"
 
 export const getSignUp: RequestHandler = (req, res, next) => {
   res.render("signup");
@@ -43,26 +44,24 @@ export const getRecords: RequestHandler = (req, res, next) => {
   res.render("records");
 };
 
-export const addPersVAT: RequestHandler = (req, res, next) => {
+export const addPersVAT: RequestHandler = async(req, res, next) => {
   const { salesVAT, taxType } = req.body;
-  const dbVAT = JSON.stringify({salesVAT})
-
-  db.query("INSERT INTO record(tax, tax_type) VALUES ($1, $2)", [dbVAT, taxType])
+  const record = new RecordData({salesVAT},taxType )
+  await record.addRecord()
   res.json({ message: "Record created" });
 };
 
-export const addCorpVAT: RequestHandler = (req, res, next) => {
+export const addCorpVAT: RequestHandler = async(req, res, next) => {
   const { salesVAT, taxType } = req.body;
-  const dbVAT = JSON.stringify({salesVAT})
-  db.query("INSERT INTO record(tax, tax_type) VALUES ($1, $2)", [dbVAT, taxType])
+  const record = new RecordData({salesVAT},taxType )
+  await record.addRecord()
   res.json({ message: "Record created" });
 };
 
-export const addIncome: RequestHandler = (req, res, next) => {
+export const addIncome: RequestHandler = async(req, res, next) => {
   const {taxableIncome} = req.body
-  const { grossIncome, incomeTax, pensionTax, taxType } =taxableIncome
-  const dbVAT = JSON.stringify({grossIncome, incomeTax, pensionTax})
-  console.log(dbVAT, 'ye thats it')
-  db.query("INSERT INTO record(tax, tax_type) VALUES ($1, $2)", [dbVAT, taxType])
+  const { grossIncome, incomeTax, pensionTax, taxType } = taxableIncome
+  const record = new RecordData({grossIncome, incomeTax, pensionTax},taxType )
+  await record.addRecord()
   res.json({ message: "Record created" });
 };
