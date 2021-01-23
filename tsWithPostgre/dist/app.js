@@ -12,6 +12,7 @@ const app = express_1.default();
 app.set('view engine', 'ejs');
 app.set('views', 'dist/views');
 app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 app.use(form_1.default);
 db_setup_1.default.connect()

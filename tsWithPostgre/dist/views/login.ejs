@@ -16,16 +16,17 @@
   <div class="loginBox">
    <h2>Access Your User</h2>
    
-  <form>
+  <form id="loginForm">
    <p>E-mail Address</p>
-   	<input type="email" name="email" placeholder="e-mail">
+   	<input type="email" name="email" placeholder="e-mail" id="loginEmail">
    <p>Password<p>
-	<input type="Password" name="pword1" placeholder="Create Password">
-   	<input type="Submit" name="sbmt" value="Login">
+	<input type="Password" name="pword" placeholder="Create Password" id="loginPwd">
+   	<input type="Submit" value="Login" id="loginBtn">
   
   <p>Don't have an account? <a href="/signup">Sign up</a></p>
   </form>
   </div>
  </main>
+ <script defer src="/js/login.js"></script>
 </body>
 </html>

@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="/css/records.css">
+    <link rel="stylesheet" href="/css/records.css" />
     <%- include('./includes/navbarStyle.ejs') %>
-</head>
+  </head>
 
-<body>
- <header>
-    <%- include('./includes/navbar.ejs') %>
- </header>
- <main>
-   <div class="float-container">
-    <div class="content-box red float-child">
-        <p> hey there</p>
+  <body>
+    <header><%- include('./includes/navbar.ejs') %></header>
+    <main>
+      <div class="float-container">
+        <%for(info of data) {%>
+        <div class="content-box red float-child">
+          <p>Taxes paid:</p>
+          <%for(taxInfo in info.tax) {%>
+          <p><%=taxInfo%> = <%=info.tax[taxInfo]%></p>
+          <%}%>
+          <P>Tax type : <%=info.tax_type%></P>
+          <p>Recorded at : <%=info.createdat%></p>
+        </div>
+
+        <%}%>
       </div>
-      <div class="content-box red float-child">
-        <p>hey there</p>
-      </div>
-      
-      <div class="content-box red float-child">
-        <p>hey there</p>
-      </div>
- 
-  </div>
- </main>
-</body>
+    </main>
+  </body>
 </html>

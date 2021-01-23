@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {getSignUp, getLogIn, getCalculator, postCalculator, getPersonVAT, getCorpVAT, getRecords, addPersVAT, addCorpVAT, addIncome} from '../controllers/Formcontroller'
+import {getSignUp, getLogIn, getCalculator, postCalculator, getPersonVAT, getCorpVAT, getRecords, addPersVAT, addCorpVAT, addIncome, postSignUp, postLogin} from '../controllers/Formcontroller'
 
 const router = express.Router()
 
@@ -23,6 +23,10 @@ router.post('/personVATRecord', addPersVAT)
 router.post('/corpVATRecord', addCorpVAT)
 
 router.post('/incomeRecord', addIncome)
+
+router.post('/postsignup', postSignUp)
+
+router.post('/postlogin', postLogin)
 
 
 

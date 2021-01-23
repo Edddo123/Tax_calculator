@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up</title>
-    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/auth.css" />
     <%- include('./includes/navbarStyle.ejs') %>
-</head>
-<body>
- <header>
-    <%- include('./includes/navbar.ejs') %>
- </header>
- <main>
-  <div class="loginBox">
-   <h2>Sign Up</h2>
-   
-  <form>
-   <p>Username</p>
-   	<input type="text" name="fname" placeholder="Username">
-   <p>E-mail Address</p>
-   	<input type="email" name="email" placeholder="e-mail">
-   <p>Password<p>
-	<input type="Password" name="pword1" placeholder="Create Password">
-   <p>Re-enter Password</p>
-	<input type="password" name="pword2" Placeholder="Confirm Password">
-   	<input type="Submit" name="sbmt">
-  
-  <p>Already have an account? <a href="/login">Log in</a></p>
-  </form>
-  </div>
- </main>
-</body>
+  </head>
+  <body>
+    <header><%- include('./includes/navbar.ejs') %></header>
+    <main>
+      <div class="loginBox">
+        <h2>Sign Up</h2>
+
+        <form
+          id="signupForm"
+          action="http://localhost:3001/postsignup"
+          method="POST"
+        >
+          <p>First name</p>
+          <input type="text" name="firstName" placeholder="First name" />
+          <p>Last name</p>
+          <input type="text" name="lastName" placeholder="Last name" />
+          <p>E-mail Address</p>
+          <input type="email" name="email" placeholder="e-mail" />
+          <p>Username</p>
+          <input type="text" name="username" placeholder="Username" />
+          <p>Password</p>
+          <p>
+            <input type="Password" name="pword" placeholder="Create Password" />
+          </p>
+
+          <p>Re-enter Password</p>
+          <input
+            type="password"
+            name="confirmPword"
+            Placeholder="Confirm Password"
+          />
+          <input type="Submit" />
+
+          <p>Already have an account? <a href="/login">Log in</a></p>
+        </form>
+      </div>
+    </main>
+  </body>
 </html>

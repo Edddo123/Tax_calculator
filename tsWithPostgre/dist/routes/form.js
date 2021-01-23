@@ -16,4 +16,6 @@ router.get('/records', Formcontroller_1.getRecords);
 router.post('/personVATRecord', Formcontroller_1.addPersVAT);
 router.post('/corpVATRecord', Formcontroller_1.addCorpVAT);
 router.post('/incomeRecord', Formcontroller_1.addIncome);
+router.post('/postsignup', Formcontroller_1.postSignUp);
+router.post('/postlogin', Formcontroller_1.postLogin);
 exports.default = router;

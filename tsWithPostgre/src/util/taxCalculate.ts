@@ -14,7 +14,7 @@ interface incomeFunction {
 }
 
 interface VATFunction {
-  (Sales: number): { response:number } | { message: string};
+  (Sales: number): { response: number } | { message: string };
 }
 
 export const incomeCalculation: incomeFunction = (
