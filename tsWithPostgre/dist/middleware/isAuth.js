@@ -6,23 +6,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isAuth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const isAuth = (req, res, next) => {
-    const authHeader = req.get('Authorization');
-    if (!authHeader) {
-        return res.redirect('/login');
-    }
-    const token = authHeader.split(' ')[1];
-    let decodedToken;
     try {
-        decodedToken = jsonwebtoken_1.default.verify(token, 'secret');
+        const authHeader = req.get("Authorization");
+        if (!authHeader) {
+            return res.redirect(401, "/login");
+        }
+        const token = authHeader.split(" ")[1];
+        let decodedToken;
+        decodedToken = jsonwebtoken_1.default.verify(token, "secret");
+        if (!decodedToken) {
+            return res.redirect("/login");
+        }
+        req.userId = decodedToken.userId;
+        next();
     }
     catch (err) {
-        return res.redirect('/login');
+        return res.redirect("/login");
     }
-    if (!decodedToken) {
-        return res.redirect('/login');
-    }
-    console.log(decodedToken);
-    req.userId = decodedToken.userId;
-    next();
 };
 exports.isAuth = isAuth;

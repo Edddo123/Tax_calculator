@@ -5,6 +5,8 @@ import RecordData from "../models/records";
 import User from "../models/users";
 import { userInfo } from "os";
 import { json } from "body-parser";
+import {formatData} from "../util/date-format"
+
 
 export const getSignUp: RequestHandler = (req, res, next) => {
   res.render("signup");
@@ -46,9 +48,10 @@ export const getCorpVAT: RequestHandler = (req, res, next) => {
 export const getRecords: RequestHandler = async (req, res, next) => {
   try {
     const data = await RecordData.getRecords();
-    res.render("records", {
-      data: data.rows,
-    });
+   let formattedData = formatData(data.rows)
+   res.render('records', {
+     data:formattedData
+   })
   } catch (err) {
     console.log(err);
   }
@@ -57,7 +60,7 @@ export const getRecords: RequestHandler = async (req, res, next) => {
 export const addPersVAT: RequestHandler = async (req, res, next) => {
   try {
     const { salesVAT, taxType } = req.body;
-    const record = new RecordData({ salesVAT }, taxType);
+    const record = new RecordData({ salesVAT }, taxType, req.userId);
     await record.addRecord();
     res.json({ message: "Record created" });
   } catch (err) {
@@ -68,7 +71,7 @@ export const addPersVAT: RequestHandler = async (req, res, next) => {
 export const addCorpVAT: RequestHandler = async (req, res, next) => {
   try {
     const { salesVAT, taxType } = req.body;
-    const record = new RecordData({ salesVAT }, taxType);
+    const record = new RecordData({ salesVAT }, taxType, req.userId);
     await record.addRecord();
     res.json({ message: "Record created" });
   } catch (err) {
@@ -82,7 +85,8 @@ export const addIncome: RequestHandler = async (req, res, next) => {
     const { grossIncome, incomeTax, pensionTax, taxType } = taxableIncome;
     const record = new RecordData(
       { grossIncome, incomeTax, pensionTax },
-      taxType
+      taxType,
+      req.userId
     );
     await record.addRecord();
     res.json({ message: "Record created" });

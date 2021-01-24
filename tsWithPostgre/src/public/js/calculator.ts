@@ -80,14 +80,16 @@ function VATCorp(e: Event) {
 
 async function getIncome(e: Event) {
   e.preventDefault();
-  const residence = document.getElementById("residence") as HTMLSelectElement;
-  const employment = document.getElementById("employment") as HTMLSelectElement;
-  const benefits = document.getElementById("benefits") as HTMLSelectElement;
-  const totalIncome = document.getElementById(
-    "totalIncome"
-  ) as HTMLInputElement;
-
   try {
+    const residence = document.getElementById("residence") as HTMLSelectElement;
+    const employment = document.getElementById(
+      "employment"
+    ) as HTMLSelectElement;
+    const benefits = document.getElementById("benefits") as HTMLSelectElement;
+    const totalIncome = document.getElementById(
+      "totalIncome"
+    ) as HTMLInputElement;
+
     const result = await fetch("http://localhost:3001/postIncomeCalculator", {
       method: "POST",
       headers: {
@@ -124,35 +126,36 @@ async function getIncome(e: Event) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("jwt"),
         },
         body: JSON.stringify({ taxableIncome: data.response }),
-      })
-      const dataRecord = await resultRecord.json();
-      console.log(data.response)
+      });
+      await resultRecord.json();
+      window.location.replace("http://localhost:3001/records");
     }
   } catch (err) {
-    console.log(err, 'income failed');
+    console.log(err, "income failed");
   }
 }
 
 async function getPersonVAT(e: Event) {
   e.preventDefault();
-  const taxType = 'VAT'
+  const taxType = "VAT";
   const VATSales = document.getElementById("VATSales") as HTMLInputElement;
   try {
-  const result = await fetch("http://localhost:3001/personVAT", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sales: VATSales.value,
-    }),
-  });
-  const data = await result.json();
-  const VATpayable = data.response.response || data.response.message
-  response.innerHTML = "";
-  response.innerHTML = `<p>${VATpayable}</p>
+    const result = await fetch("http://localhost:3001/personVAT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sales: VATSales.value,
+      }),
+    });
+    const data = await result.json();
+    const VATpayable = data.response.response || data.response.message;
+    response.innerHTML = "";
+    response.innerHTML = `<p>${VATpayable}</p>
     <input
     type="Submit"
     name="sbmt"
@@ -161,46 +164,53 @@ async function getPersonVAT(e: Event) {
   />
     `;
 
-  const personVATRecord = document.getElementById(
-    "personVATRecord"
-  )! as HTMLButtonElement;
-  personVATRecord.addEventListener("click", addPersVAT);
-  async function addPersVAT(e: Event) {
-    e.preventDefault();
-    const resultRecord = await fetch("http://localhost:3001/personVATRecord", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ salesVAT: VATpayable , taxType}),
-    })
-    const dataRecord = await resultRecord.json();
+    const personVATRecord = document.getElementById(
+      "personVATRecord"
+    )! as HTMLButtonElement;
+    personVATRecord.addEventListener("click", addPersVAT);
+    async function addPersVAT(e: Event) {
+      e.preventDefault();
+      const resultRecord = await fetch(
+        "http://localhost:3001/personVATRecord",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("jwt"),
+          },
+          body: JSON.stringify({ salesVAT: VATpayable, taxType }),
+        }
+      );
+      const dataRecord = await resultRecord.json();
+      window.location.replace("http://localhost:3001/records");
+    }
+  } catch (err) {
+    console.log(err, "Person VAT failed");
   }
-} catch(err) {
-  console.log(err, 'Person VAT failed')
-}
 }
 
 async function getCorpVAT(e: Event) {
   e.preventDefault();
-  const taxType = 'corpVAT'
-  const corpVATSales = document.getElementById(
-    "corpVATSales"
-  ) as HTMLInputElement;
-  const result = await fetch("http://localhost:3001/corpVAT", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      sales: corpVATSales.value,
-    }),
-  });
   try {
-  const data = await result.json();
-  const VATpayable = data.response.response || data.response.message
-  response.innerHTML = "";
-  response.innerHTML = `<p>Your VAT payable: ${VATpayable}</p>
+    const taxType = "corpVAT";
+    const corpVATSales = document.getElementById(
+      "corpVATSales"
+    ) as HTMLInputElement;
+    const result = await fetch("http://localhost:3001/corpVAT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        sales: corpVATSales.value,
+      }),
+    });
+
+    const data = await result.json();
+    const VATpayable = data.response.response || data.response.message;
+    response.innerHTML = "";
+    response.innerHTML = `<p>Your VAT payable: ${VATpayable}</p>
     <input
     type="Submit"
     name="sbmt"
@@ -209,27 +219,25 @@ async function getCorpVAT(e: Event) {
   />
     `;
 
-  const corpVATRecord = document.getElementById(
-    "corpVATRecord"
-  )! as HTMLButtonElement;
-  corpVATRecord.addEventListener("click", addCorpVAT);
+    const corpVATRecord = document.getElementById(
+      "corpVATRecord"
+    )! as HTMLButtonElement;
+    corpVATRecord.addEventListener("click", addCorpVAT);
 
-  async function addCorpVAT(e: Event) {
-    e.preventDefault();
-    const resultRecord = await fetch("http://localhost:3001/corpVATRecord", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ salesVAT: VATpayable, taxType }),
-    });
-    await resultRecord.json();
-    window.location.replace("http://localhost:3001/records");
+    async function addCorpVAT(e: Event) {
+      e.preventDefault();
+      const resultRecord = await fetch("http://localhost:3001/corpVATRecord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
+        },
+        body: JSON.stringify({ salesVAT: VATpayable, taxType }),
+      });
+      const dataRecord = await resultRecord.json();
+      window.location.replace("http://localhost:3001/records");
+    }
+  } catch (err) {
+    console.log(err, "corpVAT failed");
   }
-}catch(err) {
-  console.log(err, 'corpVAT failed')
 }
-}
-
-
-

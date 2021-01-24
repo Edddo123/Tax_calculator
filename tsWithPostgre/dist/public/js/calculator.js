@@ -63,11 +63,11 @@ function VATCorp(e) {
 function getIncome(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
-        const residence = document.getElementById("residence");
-        const employment = document.getElementById("employment");
-        const benefits = document.getElementById("benefits");
-        const totalIncome = document.getElementById("totalIncome");
         try {
+            const residence = document.getElementById("residence");
+            const employment = document.getElementById("employment");
+            const benefits = document.getElementById("benefits");
+            const totalIncome = document.getElementById("totalIncome");
             const result = yield fetch("http://localhost:3001/postIncomeCalculator", {
                 method: "POST",
                 headers: {
@@ -103,23 +103,24 @@ function getIncome(e) {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            "Authorization": "Bearer " + localStorage.getItem("jwt"),
                         },
                         body: JSON.stringify({ taxableIncome: data.response }),
                     });
-                    const dataRecord = yield resultRecord.json();
-                    console.log(data.response);
+                    yield resultRecord.json();
+                    window.location.replace("http://localhost:3001/records");
                 });
             }
         }
         catch (err) {
-            console.log(err, 'income failed');
+            console.log(err, "income failed");
         }
     });
 }
 function getPersonVAT(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
-        const taxType = 'VAT';
+        const taxType = "VAT";
         const VATSales = document.getElementById("VATSales");
         try {
             const result = yield fetch("http://localhost:3001/personVAT", {
@@ -151,33 +152,36 @@ function getPersonVAT(e) {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            "Authorization": "Bearer " + localStorage.getItem("jwt"),
                         },
                         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
                     });
                     const dataRecord = yield resultRecord.json();
+                    window.location.replace("http://localhost:3001/records");
                 });
             }
         }
         catch (err) {
-            console.log(err, 'Person VAT failed');
+            console.log(err, "Person VAT failed");
         }
     });
 }
 function getCorpVAT(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
-        const taxType = 'corpVAT';
-        const corpVATSales = document.getElementById("corpVATSales");
-        const result = yield fetch("http://localhost:3001/corpVAT", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                sales: corpVATSales.value,
-            }),
-        });
         try {
+            const taxType = "corpVAT";
+            const corpVATSales = document.getElementById("corpVATSales");
+            const result = yield fetch("http://localhost:3001/corpVAT", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwt"),
+                },
+                body: JSON.stringify({
+                    sales: corpVATSales.value,
+                }),
+            });
             const data = yield result.json();
             const VATpayable = data.response.response || data.response.message;
             response.innerHTML = "";
@@ -198,16 +202,17 @@ function getCorpVAT(e) {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            Authorization: "Bearer " + localStorage.getItem("jwt"),
                         },
                         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
                     });
-                    yield resultRecord.json();
+                    const dataRecord = yield resultRecord.json();
                     window.location.replace("http://localhost:3001/records");
                 });
             }
         }
         catch (err) {
-            console.log(err, 'corpVAT failed');
+            console.log(err, "corpVAT failed");
         }
     });
 }

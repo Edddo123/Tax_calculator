@@ -16,6 +16,7 @@ exports.postLogin = exports.postSignUp = exports.addIncome = exports.addCorpVAT 
 const taxCalculate_1 = require("../util/taxCalculate");
 const records_1 = __importDefault(require("../models/records"));
 const users_1 = __importDefault(require("../models/users"));
+const date_format_1 = require("../util/date-format");
 const getSignUp = (req, res, next) => {
     res.render("signup");
 };
@@ -50,8 +51,9 @@ exports.getCorpVAT = getCorpVAT;
 const getRecords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield records_1.default.getRecords();
-        res.render("records", {
-            data: data.rows,
+        let formattedData = date_format_1.formatData(data.rows);
+        res.render('records', {
+            data: formattedData
         });
     }
     catch (err) {
@@ -62,7 +64,7 @@ exports.getRecords = getRecords;
 const addPersVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { salesVAT, taxType } = req.body;
-        const record = new records_1.default({ salesVAT }, taxType);
+        const record = new records_1.default({ salesVAT }, taxType, req.userId);
         yield record.addRecord();
         res.json({ message: "Record created" });
     }
@@ -74,7 +76,7 @@ exports.addPersVAT = addPersVAT;
 const addCorpVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { salesVAT, taxType } = req.body;
-        const record = new records_1.default({ salesVAT }, taxType);
+        const record = new records_1.default({ salesVAT }, taxType, req.userId);
         yield record.addRecord();
         res.json({ message: "Record created" });
     }
@@ -87,7 +89,7 @@ const addIncome = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     try {
         const { taxableIncome } = req.body;
         const { grossIncome, incomeTax, pensionTax, taxType } = taxableIncome;
-        const record = new records_1.default({ grossIncome, incomeTax, pensionTax }, taxType);
+        const record = new records_1.default({ grossIncome, incomeTax, pensionTax }, taxType, req.userId);
         yield record.addRecord();
         res.json({ message: "Record created" });
     }
