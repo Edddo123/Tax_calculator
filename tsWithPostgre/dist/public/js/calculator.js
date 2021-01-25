@@ -63,6 +63,7 @@ function VATCorp(e) {
 function getIncome(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
+        const taxType = "Income";
         try {
             const residence = document.getElementById("residence");
             const employment = document.getElementById("employment");

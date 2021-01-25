@@ -3,6 +3,7 @@ loginForm.addEventListener("click", loggedIn)
 
 async function loggedIn(e:Event) {
   e.preventDefault()
+  try{
   const loginEmail = document.getElementById('loginEmail')! as HTMLInputElement
   const loginPwd = document.getElementById('loginPwd')! as HTMLInputElement
   const result = await fetch("http://localhost:3001/postlogin", {
@@ -15,7 +16,11 @@ async function loggedIn(e:Event) {
   const data = await result.json()
   if(data.token) {
       localStorage.setItem("jwt", data.token)
+      window.location.replace("http://localhost:3001/records")
   }
   else console.log(data.message)
 
+} catch(err) {
+  console.log(err)
+}
 }

@@ -80,6 +80,7 @@ function VATCorp(e: Event) {
 
 async function getIncome(e: Event) {
   e.preventDefault();
+  const taxType = "Income";
   try {
     const residence = document.getElementById("residence") as HTMLSelectElement;
     const employment = document.getElementById(
