@@ -7,7 +7,7 @@ exports.isAuth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const isAuth = (req, res, next) => {
     try {
-        const authHeader = req.get("Authorization");
+        const authHeader = req.get("Authorization") || req.query.tok;
         if (!authHeader) {
             return res.redirect(401, "/login");
         }

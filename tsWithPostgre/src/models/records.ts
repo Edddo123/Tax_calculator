@@ -8,8 +8,8 @@ export default class RecordData {
     private userId: string
   ) {}
 
-  static getRecords() {
-   return db.query("SELECT tax, tax_type, createdat FROM record"); //will be modified after adding user
+  static getRecords = (userId:string) => {
+   return db.query("SELECT tax, tax_type, createdat FROM record WHERE user_id = $1", [userId]); //will be modified after adding user
    
   }
 

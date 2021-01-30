@@ -16,7 +16,7 @@ async function loggedIn(e:Event) {
   const data = await result.json()
   if(data.token) {
       localStorage.setItem("jwt", data.token)
-      window.location.replace("http://localhost:3001/records")
+      window.location.replace("http://localhost:3001/records/?tok=Bearer "+ localStorage.getItem("jwt"))
   }
   else console.log(data.message)
 

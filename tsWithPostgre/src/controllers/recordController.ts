@@ -8,13 +8,15 @@ import {
   personVATRecordSchema,
   corpVATRecordSchema
 } from "../middleware/validation/recordValidation";
+import { myTok } from "./authController";
 
 export const getRecords: RequestHandler = async (req, res, next) => {
   try {
-    const data = await RecordData.getRecords();
+    const data = await RecordData.getRecords(req.userId);
     let formattedData = formatData(data.rows);
     res.render("records", {
       data: formattedData,
+      myTok:myTok
     });
   } catch (err) {
     console.log(err);

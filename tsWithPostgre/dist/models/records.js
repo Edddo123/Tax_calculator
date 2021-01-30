@@ -10,12 +10,12 @@ class RecordData {
         this.taxType = taxType;
         this.userId = userId;
     }
-    static getRecords() {
-        return db_setup_1.default.query("SELECT tax, tax_type, createdat FROM record");
-    }
     addRecord() {
         const constructedObj = JSON.stringify(this.taxArray);
         return db_setup_1.default.query("INSERT INTO record(tax, tax_type, user_id) VALUES ($1, $2, $3)", [constructedObj, this.taxType, this.userId]);
     }
 }
 exports.default = RecordData;
+RecordData.getRecords = (userId) => {
+    return db_setup_1.default.query("SELECT tax, tax_type, createdat FROM record WHERE user_id = $1", [userId]);
+};

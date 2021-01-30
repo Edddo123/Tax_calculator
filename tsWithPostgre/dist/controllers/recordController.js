@@ -16,12 +16,14 @@ exports.addIncome = exports.addCorpVAT = exports.addPersVAT = exports.getRecords
 const records_1 = __importDefault(require("../models/records"));
 const date_format_1 = require("../util/date-format");
 const recordValidation_1 = require("../middleware/validation/recordValidation");
+const authController_1 = require("./authController");
 const getRecords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield records_1.default.getRecords();
+        const data = yield records_1.default.getRecords(req.userId);
         let formattedData = date_format_1.formatData(data.rows);
         res.render("records", {
             data: formattedData,
+            myTok: authController_1.myTok
         });
     }
     catch (err) {

@@ -10,4 +10,5 @@ router.get("/signup", authController_1.getSignUp);
 router.get("/login", authController_1.getLogIn);
 router.post("/postsignup", authController_1.postSignUp);
 router.post("/postlogin", authController_1.postLogin);
+router.get('/logOut', authController_1.loggedOut);
 exports.default = router;

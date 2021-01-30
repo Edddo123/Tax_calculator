@@ -12,15 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postLogin = exports.postSignUp = exports.getLogIn = exports.getSignUp = void 0;
+exports.loggedOut = exports.postLogin = exports.postSignUp = exports.getLogIn = exports.getSignUp = exports.myTok = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const authValidation_1 = require("../middleware/validation/authValidation");
 const getSignUp = (req, res, next) => {
-    res.render("signup");
+    res.render("signup", { myTok: exports.myTok });
 };
 exports.getSignUp = getSignUp;
 const getLogIn = (req, res, next) => {
-    res.render("login");
+    res.render("login", { myTok: exports.myTok });
 };
 exports.getLogIn = getLogIn;
 const postSignUp = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,7 +29,7 @@ const postSignUp = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (error) {
             throw error;
         }
-        const { firstName, lastName, username, email, pword, confirmPword, } = value;
+        const { firstName, lastName, username, email, pword, confirmPword } = value;
         const user = new users_1.default(firstName, lastName, username, email, pword, confirmPword);
         yield user.addUser();
         res.redirect("/login");
@@ -46,9 +46,14 @@ const postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     const getToken = yield users_1.default.checkCredentials(value.loginEmail, value.loginPwd);
     if (getToken) {
-        const token = getToken;
-        return res.status(200).json({ token: token, message: "Successful login" });
+        exports.myTok = getToken;
+        return res.status(200).json({ token: exports.myTok, message: "Successful login" });
     }
     res.json({ message: "Wrong credentials" });
 });
 exports.postLogin = postLogin;
+const loggedOut = (req, res, next) => {
+    exports.myTok = "";
+    res.json({ message: 'User successfully logged out' });
+};
+exports.loggedOut = loggedOut;

@@ -109,7 +109,7 @@ function getIncome(e) {
                         body: JSON.stringify({ taxableIncome: data.response }),
                     });
                     yield resultRecord.json();
-                    window.location.replace("http://localhost:3001/records");
+                    window.location.replace("http://localhost:3001/records?tok=Bearer " + localStorage.getItem("jwt"));
                 });
             }
         }
@@ -158,7 +158,7 @@ function getPersonVAT(e) {
                         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
                     });
                     const dataRecord = yield resultRecord.json();
-                    window.location.replace("http://localhost:3001/records");
+                    window.location.replace("http://localhost:3001/records?tok=Bearer " + localStorage.getItem("jwt"));
                 });
             }
         }
@@ -208,7 +208,7 @@ function getCorpVAT(e) {
                         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
                     });
                     const dataRecord = yield resultRecord.json();
-                    window.location.replace("http://localhost:3001/records");
+                    window.location.replace("http://localhost:3001/records?tok=Bearer " + localStorage.getItem("jwt"));
                 });
             }
         }

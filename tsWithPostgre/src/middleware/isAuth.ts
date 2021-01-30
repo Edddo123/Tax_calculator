@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export const isAuth: RequestHandler = (req, res, next) => {
     try {
-  const authHeader = req.get("Authorization");
+  const authHeader:any = req.get("Authorization") || req.query.tok
     if (!authHeader) {
       return res.redirect( 401, "/login");
     }

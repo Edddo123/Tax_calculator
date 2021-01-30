@@ -132,7 +132,7 @@ async function getIncome(e: Event) {
         body: JSON.stringify({ taxableIncome: data.response }),
       });
       await resultRecord.json();
-      window.location.replace("http://localhost:3001/records");
+      window.location.replace("http://localhost:3001/records?tok=Bearer "+ localStorage.getItem("jwt"));
     }
   } catch (err) {
     console.log(err, "income failed");
@@ -183,7 +183,7 @@ async function getPersonVAT(e: Event) {
         }
       );
       const dataRecord = await resultRecord.json();
-      window.location.replace("http://localhost:3001/records");
+      window.location.replace("http://localhost:3001/records?tok=Bearer "+ localStorage.getItem("jwt"));
     }
   } catch (err) {
     console.log(err, "Person VAT failed");
@@ -236,7 +236,7 @@ async function getCorpVAT(e: Event) {
         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
       });
       const dataRecord = await resultRecord.json();
-      window.location.replace("http://localhost:3001/records");
+      window.location.replace("http://localhost:3001/records?tok=Bearer "+ localStorage.getItem("jwt"));
     }
   } catch (err) {
     console.log(err, "corpVAT failed");

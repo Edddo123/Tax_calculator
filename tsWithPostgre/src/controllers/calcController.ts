@@ -1,9 +1,10 @@
 import { RequestHandler } from "express";
 import { incomeCalculation, VATCalculation } from "../util/taxCalculate";
 import { IncomecalcSchema, personVATSchema, corpVATSchema } from "../middleware/validation/calcValidation";
+import { myTok } from "./authController";
 
 export const getCalculator: RequestHandler = (req, res, next) => {
-  res.render("calculator");
+  res.render("calculator", {myTok:myTok});
 };
 
 export const postCalculator: RequestHandler = (req, res, next) => {
