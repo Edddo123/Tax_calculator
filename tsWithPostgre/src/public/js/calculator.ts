@@ -211,7 +211,7 @@ async function getCorpVAT(e: Event) {
     const data = await result.json();
     const VATpayable = data.response.response || data.response.message;
     response.innerHTML = "";
-    response.innerHTML = `<p>Your VAT payable: ${VATpayable}</p>
+    response.innerHTML = `<p>${VATpayable}</p>
     <input
     type="Submit"
     name="sbmt"

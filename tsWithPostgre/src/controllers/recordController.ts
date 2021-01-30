@@ -3,10 +3,11 @@ import RecordData from "../models/records";
 import { userInfo } from "os";
 import { json } from "body-parser";
 import { formatData } from "../util/date-format";
-
-
-
-
+import {
+  incomeRecordSchema,
+  personVATRecordSchema,
+  corpVATRecordSchema
+} from "../middleware/validation/recordValidation";
 
 export const getRecords: RequestHandler = async (req, res, next) => {
   try {
@@ -22,8 +23,9 @@ export const getRecords: RequestHandler = async (req, res, next) => {
 
 export const addPersVAT: RequestHandler = async (req, res, next) => {
   try {
-    const { salesVAT, taxType } = req.body;
-    const record = new RecordData({ salesVAT }, taxType, req.userId);
+    const { error, value } = personVATRecordSchema.validate(req.body);
+    if(error) throw error
+    const record = new RecordData({ salesVAT: value.salesVAT }, value.taxType, req.userId);
     await record.addRecord();
     res.json({ message: "Record created" });
   } catch (err) {
@@ -33,8 +35,9 @@ export const addPersVAT: RequestHandler = async (req, res, next) => {
 
 export const addCorpVAT: RequestHandler = async (req, res, next) => {
   try {
-    const { salesVAT, taxType } = req.body;
-    const record = new RecordData({ salesVAT }, taxType, req.userId);
+    const { error, value } = corpVATRecordSchema.validate(req.body);
+    if(error) throw error
+    const record = new RecordData({ salesVAT: value.salesVAT }, value.taxType, req.userId);
     await record.addRecord();
     res.json({ message: "Record created" });
   } catch (err) {
@@ -44,8 +47,9 @@ export const addCorpVAT: RequestHandler = async (req, res, next) => {
 
 export const addIncome: RequestHandler = async (req, res, next) => {
   try {
-    const { taxableIncome } = req.body;
-    const { grossIncome, incomeTax, pensionTax, taxType } = taxableIncome;
+    const { error, value } = incomeRecordSchema.validate(req.body.taxableIncome);
+    if (error) throw error;
+    const { grossIncome, incomeTax, pensionTax, taxType } = value;
     const record = new RecordData(
       { grossIncome, incomeTax, pensionTax },
       taxType,
@@ -57,5 +61,3 @@ export const addIncome: RequestHandler = async (req, res, next) => {
     console.log(err);
   }
 };
-
-

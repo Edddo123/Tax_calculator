@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { incomeCalculation, VATCalculation } from "../util/taxCalculate";
-import { IncomecalcSchema } from "../middleware/validation/calcValidation";
+import { IncomecalcSchema, personVATSchema, corpVATSchema } from "../middleware/validation/calcValidation";
 
 export const getCalculator: RequestHandler = (req, res, next) => {
   res.render("calculator");
@@ -23,13 +23,15 @@ export const postCalculator: RequestHandler = (req, res, next) => {
 };
 
 export const getPersonVAT: RequestHandler = (req, res, next) => {
-  const { sales } = req.body;
-  const calculatedVat = VATCalculation(+sales);
+  const {error, value} = personVATSchema.validate(req.body)
+  if(error) throw error;
+  const calculatedVat = VATCalculation(value.sales);
   res.json({ response: calculatedVat });
 };
 
 export const getCorpVAT: RequestHandler = (req, res, next) => {
-  const { sales } = req.body;
-  const calculatedVat = VATCalculation(+sales);
+  const {error, value} = corpVATSchema.validate(req.body)
+  if(error) throw error;
+  const calculatedVat = VATCalculation(value.sales);
   res.json({ response: calculatedVat });
 };

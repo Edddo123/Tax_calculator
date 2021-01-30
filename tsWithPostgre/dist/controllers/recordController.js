@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addIncome = exports.addCorpVAT = exports.addPersVAT = exports.getRecords = void 0;
 const records_1 = __importDefault(require("../models/records"));
 const date_format_1 = require("../util/date-format");
+const recordValidation_1 = require("../middleware/validation/recordValidation");
 const getRecords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield records_1.default.getRecords();
@@ -30,8 +31,10 @@ const getRecords = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.getRecords = getRecords;
 const addPersVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { salesVAT, taxType } = req.body;
-        const record = new records_1.default({ salesVAT }, taxType, req.userId);
+        const { error, value } = recordValidation_1.personVATRecordSchema.validate(req.body);
+        if (error)
+            throw error;
+        const record = new records_1.default({ salesVAT: value.salesVAT }, value.taxType, req.userId);
         yield record.addRecord();
         res.json({ message: "Record created" });
     }
@@ -42,8 +45,10 @@ const addPersVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.addPersVAT = addPersVAT;
 const addCorpVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { salesVAT, taxType } = req.body;
-        const record = new records_1.default({ salesVAT }, taxType, req.userId);
+        const { error, value } = recordValidation_1.corpVATRecordSchema.validate(req.body);
+        if (error)
+            throw error;
+        const record = new records_1.default({ salesVAT: value.salesVAT }, value.taxType, req.userId);
         yield record.addRecord();
         res.json({ message: "Record created" });
     }
@@ -54,8 +59,10 @@ const addCorpVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.addCorpVAT = addCorpVAT;
 const addIncome = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { taxableIncome } = req.body;
-        const { grossIncome, incomeTax, pensionTax, taxType } = taxableIncome;
+        const { error, value } = recordValidation_1.incomeRecordSchema.validate(req.body.taxableIncome);
+        if (error)
+            throw error;
+        const { grossIncome, incomeTax, pensionTax, taxType } = value;
         const record = new records_1.default({ grossIncome, incomeTax, pensionTax }, taxType, req.userId);
         yield record.addRecord();
         res.json({ message: "Record created" });

@@ -31,7 +31,7 @@ export const incomeCalculation: incomeFunction = (
 };
 
 export const VATCalculation: VATFunction = (Sales) => {
-  const VATpayable: number = +(Sales * 0.018).toFixed(2);
+  const VATpayable: number = +(Sales * 0.18).toFixed(2);
   if (Sales <= 100000) {
     return { message: "you have no obligation to pay VAT" };
   } else {

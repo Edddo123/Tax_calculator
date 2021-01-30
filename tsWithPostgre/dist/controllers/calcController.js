@@ -18,14 +18,18 @@ const postCalculator = (req, res, next) => {
 };
 exports.postCalculator = postCalculator;
 const getPersonVAT = (req, res, next) => {
-    const { sales } = req.body;
-    const calculatedVat = taxCalculate_1.VATCalculation(+sales);
+    const { error, value } = calcValidation_1.personVATSchema.validate(req.body);
+    if (error)
+        throw error;
+    const calculatedVat = taxCalculate_1.VATCalculation(value.sales);
     res.json({ response: calculatedVat });
 };
 exports.getPersonVAT = getPersonVAT;
 const getCorpVAT = (req, res, next) => {
-    const { sales } = req.body;
-    const calculatedVat = taxCalculate_1.VATCalculation(+sales);
+    const { error, value } = calcValidation_1.corpVATSchema.validate(req.body);
+    if (error)
+        throw error;
+    const calculatedVat = taxCalculate_1.VATCalculation(value.sales);
     res.json({ response: calculatedVat });
 };
 exports.getCorpVAT = getCorpVAT;

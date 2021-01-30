@@ -40,7 +40,7 @@ const postSignUp = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.postSignUp = postSignUp;
 const postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { error, value } = authValidation_1.signupSchema.validate(req.body);
+    const { error, value } = authValidation_1.loginSchema.validate(req.body);
     if (error) {
         throw error;
     }

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import User from "../models/users";
-import { signupSchema } from "../middleware/validation/authValidation";
+import { loginSchema, signupSchema } from "../middleware/validation/authValidation";
 
 export const getSignUp: RequestHandler = (req, res, next) => {
   res.render("signup");
@@ -43,7 +43,7 @@ export const postSignUp: RequestHandler = async (req, res, next) => {
 };
 
 export const postLogin: RequestHandler = async (req, res, next) => {
-  const { error, value } =  signupSchema.validate(req.body);
+  const { error, value } =  loginSchema.validate(req.body);
   if(error) {
     throw error
   }
