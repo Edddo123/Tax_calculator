@@ -9,7 +9,7 @@ const getCalculator = (req, res, next) => {
 };
 exports.getCalculator = getCalculator;
 const postCalculator = (req, res, next) => {
-    const taxType = 'Income';
+    const taxType = "Income";
     const { error, value } = calcValidation_1.IncomecalcSchema.validate(req.body);
     if (error) {
         throw error;

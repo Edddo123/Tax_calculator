@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addIncome = exports.addCorpVAT = exports.addPersVAT = exports.getRecords = void 0;
+exports.deleteRecord = exports.addIncome = exports.addCorpVAT = exports.addPersVAT = exports.getRecords = void 0;
 const records_1 = __importDefault(require("../models/records"));
 const date_format_1 = require("../util/date-format");
 const recordValidation_1 = require("../middleware/validation/recordValidation");
@@ -74,3 +74,11 @@ const addIncome = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.addIncome = addIncome;
+const deleteRecord = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { error, value } = recordValidation_1.recordIdSchema.validate(req.query.recordId);
+    if (error)
+        throw error;
+    records_1.default.deleteRecord(req.userId, value);
+    res.json({ message: 'Record deleted' });
+});
+exports.deleteRecord = deleteRecord;

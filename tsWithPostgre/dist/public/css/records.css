@@ -7,6 +7,24 @@ p {
   font-weight: 100;
   color: white;
 }
+
+ button {
+  background-color: rgba(17, 16, 16, 0.5);
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+ button:hover {
+    background-color: whitesmoke;
+    color: black;
+}
 .float-container {
   padding: 20px;
 }
@@ -24,17 +42,7 @@ p {
   margin: 40px;
 }
 
-.content-box:after {
-  content: "";
-  position: absolute;
-  border: 2px solid;
-  height: 100%;
-  width: 100%;
-  top: 10px;
-  left: -10px;
-  display: grid;
-  grid-row: 1;
-}
+
 
 .red {
   background-color: rgba(17, 16, 16, 0.5);

@@ -11,4 +11,5 @@ router.get("/records", isAuth_1.isAuth, recordController_1.getRecords);
 router.post("/personVATRecord", isAuth_1.isAuth, recordController_1.addPersVAT);
 router.post("/corpVATRecord", isAuth_1.isAuth, recordController_1.addCorpVAT);
 router.post("/incomeRecord", isAuth_1.isAuth, recordController_1.addIncome);
+router.delete("/deleteRecord", isAuth_1.isAuth, recordController_1.deleteRecord);
 exports.default = router;

@@ -20,10 +20,19 @@
           <%}%>
           <P>Tax type : <%=info.tax_type%></P>
           <p>Recorded at : <%=info.newDate%></p>
+          <input type="hidden" value="<%=info.record_id%>" name="recordId" />
+          <button
+            type="submit"
+            class="deleteButton"
+            onclick="deleteRecord(this)"
+          >
+            Delete Record
+          </button>
         </div>
 
         <%}%>
       </div>
     </main>
+    <script src="/js/records.js" defer></script>
   </body>
 </html>

@@ -17,3 +17,7 @@ export const incomeRecordSchema = Joi.object({
     salesVAT: Joi.alternatives().try( Joi.number().positive().required(), Joi.string().min(2).max(33).required()),
     taxType: Joi.string().min(2).max(10).required()
   });
+
+  export const recordIdSchema = Joi.string().uuid()
+    
+  

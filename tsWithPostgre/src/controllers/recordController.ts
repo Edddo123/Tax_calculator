@@ -6,7 +6,8 @@ import { formatData } from "../util/date-format";
 import {
   incomeRecordSchema,
   personVATRecordSchema,
-  corpVATRecordSchema
+  corpVATRecordSchema,
+  recordIdSchema
 } from "../middleware/validation/recordValidation";
 import { myTok } from "./authController";
 
@@ -63,3 +64,10 @@ export const addIncome: RequestHandler = async (req, res, next) => {
     console.log(err);
   }
 };
+
+export const deleteRecord:RequestHandler = async(req, res, next) => {
+  const {error, value} = recordIdSchema.validate(req.query.recordId)
+  if(error) throw error;
+  RecordData.deleteRecord(req.userId, value)
+  res.json({message:'Record deleted'})
+}
