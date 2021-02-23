@@ -7,10 +7,13 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const db_setup_1 = __importDefault(require("./util/db-setup"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const record_1 = __importDefault(require("./routes/record"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const calculator_1 = __importDefault(require("./routes/calculator"));
+const feedback_1 = __importDefault(require("./routes/feedback"));
 const app = express_1.default();
+dotenv_1.default.config();
 app.set("view engine", "ejs");
 app.set("views", "dist/views");
 app.use(body_parser_1.default.json());
@@ -19,6 +22,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use(auth_1.default);
 app.use(record_1.default);
 app.use(calculator_1.default);
+app.use(feedback_1.default);
 db_setup_1.default.connect()
     .then(() => {
     console.log("connected to database");

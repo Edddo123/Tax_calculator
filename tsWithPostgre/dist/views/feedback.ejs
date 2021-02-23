@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/feedback.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <%- include('./includes/navbarStyle.ejs') %>
+  </head>
+
+  <body>
+    <header><%- include('./includes/navbar.ejs') %></header>
+    <main>
+      <div class="loginBox">
+        <h2>Add Your Feedback</h2>
+
+        <form id="feedbackForm">
+          <p>What do you think about our application?</p>
+          <textarea name="" id="content" cols="50" rows="3"></textarea>
+          <p>How would you rate us?</p>
+          <div id="rating">
+            <span class="fa fa-star checked"
+              ><input type="hidden" value="1" id="inp1"
+            /></span>
+            <span class="fa fa-star"
+              ><input type="hidden" value="2" id="inp2"
+            /></span>
+            <span class="fa fa-star"
+              ><input type="hidden" value="3" id="inp3"
+            /></span>
+            <span class="fa fa-star"
+              ><input type="hidden" value="4" id="inp4"
+            /></span>
+            <span class="fa fa-star"
+              ><input type="hidden" value="5" id="inp5"
+            /></span>
+            <input type="Submit" value="Login" id="loginBtn" />
+          </div>
+        </form>
+      </div>
+      <div class="float-container">
+        <%for(feed of feedData) {%>
+        <div class="content-box red float-child">
+          <p>Username: <%=feed.username%> at <%=feed.createdat%></p>
+          
+          <p><%=feed.content%></p>
+          <%if feed.rate%>
+          <P><span class="fa fa-star checked"
+            ><input type="hidden" value="1" id="inp1"
+          /></span>
+          <span class="fa fa-star"
+            ><input type="hidden" value="2" id="inp2"
+          /></span>
+          <span class="fa fa-star"
+            ><input type="hidden" value="3" id="inp3"
+          /></span>
+          <span class="fa fa-star"
+            ><input type="hidden" value="4" id="inp4"
+          /></span>
+          <span class="fa fa-star"
+            ><input type="hidden" value="5" id="inp5"
+          /></span></P>
+          <button
+            type="submit"
+            class="deleteButton"
+            onclick="deleteRecord(this)"
+          >
+            Delete Feedback
+          </button>
+        </div>
+        <%}%>
+       
+      </div>
+    </main>
+    <script src="/js/feedback.js" defer></script>
+  </body>
+</html>

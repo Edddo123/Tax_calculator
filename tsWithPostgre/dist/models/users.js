@@ -38,9 +38,9 @@ class User {
                 if (checkResult) {
                     const token = jsonwebtoken_1.default.sign({
                         email: queryUser.rows[0].email,
-                        userId: queryUser.rows[0].user_id.toString()
-                    }, 'secret', { expiresIn: '1h' });
-                    return token;
+                        userId: queryUser.rows[0].user_id.toString(),
+                    }, "secret");
+                    return { token };
                 }
             }
             return false;

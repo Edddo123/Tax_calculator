@@ -208,6 +208,7 @@ function getCorpVAT(e) {
                         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
                     });
                     const dataRecord = yield resultRecord.json();
+                    console.log('here front');
                     window.location.replace("http://localhost:3001/records?tok=Bearer " + localStorage.getItem("jwt"));
                 });
             }

@@ -236,6 +236,7 @@ async function getCorpVAT(e: Event) {
         body: JSON.stringify({ salesVAT: VATpayable, taxType }),
       });
       const dataRecord = await resultRecord.json();
+      console.log('here front')
       window.location.replace("http://localhost:3001/records?tok=Bearer "+ localStorage.getItem("jwt"));
     }
   } catch (err) {

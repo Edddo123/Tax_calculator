@@ -2,10 +2,10 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 
 export const isAuth: RequestHandler = (req, res, next) => {
-    try {
-  const authHeader:any = req.get("Authorization") || req.query.tok
+  try {
+    const authHeader: any = req.get("Authorization") || req.query.tok;
     if (!authHeader) {
-      return res.redirect( 401, "/login");
+      return res.status(401).json({ message: "no token" });
     }
     const token = authHeader.split(" ")[1];
     let decodedToken: any;
@@ -13,12 +13,13 @@ export const isAuth: RequestHandler = (req, res, next) => {
     decodedToken = jwt.verify(token, "secret");
 
     if (!decodedToken) {
-      return res.redirect("/login");
+      return res.status(401).json({ message: "Wrong token" });
     }
     //my property doesnt exist on req object interface so we need to add it
     req.userId = decodedToken.userId;
     next();
   } catch (err) {
-    return res.redirect("/login");
+    console.error(err);
+    return res.status(401).json({ message: err });
   }
 };

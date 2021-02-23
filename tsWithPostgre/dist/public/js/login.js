@@ -8,25 +8,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const loginForm = document.getElementById('loginBtn');
+const loginForm = document.getElementById("loginBtn");
 loginForm.addEventListener("click", loggedIn);
 function loggedIn(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
         try {
-            const loginEmail = document.getElementById('loginEmail');
-            const loginPwd = document.getElementById('loginPwd');
+            const loginEmail = document.getElementById("loginEmail");
+            const loginPwd = document.getElementById("loginPwd");
             const result = yield fetch("http://localhost:3001/postlogin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ loginEmail: loginEmail.value, loginPwd: loginPwd.value })
+                body: JSON.stringify({
+                    loginEmail: loginEmail.value,
+                    loginPwd: loginPwd.value,
+                }),
             });
             const data = yield result.json();
             if (data.token) {
                 localStorage.setItem("jwt", data.token);
-                window.location.replace("http://localhost:3001/records/?tok=Bearer " + localStorage.getItem("jwt"));
+                window.location.replace("http://localhost:3001/records/?tok=Bearer " +
+                    localStorage.getItem("jwt"));
             }
             else
                 console.log(data.message);

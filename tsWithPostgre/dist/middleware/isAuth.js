@@ -9,19 +9,20 @@ const isAuth = (req, res, next) => {
     try {
         const authHeader = req.get("Authorization") || req.query.tok;
         if (!authHeader) {
-            return res.redirect(401, "/login");
+            return res.status(401).json({ message: "no token" });
         }
         const token = authHeader.split(" ")[1];
         let decodedToken;
         decodedToken = jsonwebtoken_1.default.verify(token, "secret");
         if (!decodedToken) {
-            return res.redirect("/login");
+            return res.status(401).json({ message: "Wrong token" });
         }
         req.userId = decodedToken.userId;
         next();
     }
     catch (err) {
-        return res.redirect("/login");
+        console.error(err);
+        return res.status(401).json({ message: err });
     }
 };
 exports.isAuth = isAuth;

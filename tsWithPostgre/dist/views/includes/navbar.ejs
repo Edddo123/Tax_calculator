@@ -1,30 +1,39 @@
-
 <div class="topnav" id="myTopnav">
   <a href="#home" class="active">Home</a>
   <a href="/calculator">Calculator</a>
-  <a href="/records?tok=Bearer <%=myTok%>">Records</a>
+  <a id="recordTag">Records</a>
+  <a href="/feedback">Feedback</a>
   <a href="/signup">Sign-Up</a>
   <a href="/login">Login</a>
   <a id="logout" href="/login">Logout</a>
-  <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+  <a
+    href="javascript:void(0);"
+    style="font-size: 15px"
+    class="icon"
+    onclick="myFunction()"
+    >&#9776;</a
+  >
 </div>
 
 <script>
-function myFunction() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
+  function myFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+      x.className += " responsive";
+    } else {
+      x.className = "topnav";
+    }
   }
-}
-document.getElementById('logout').addEventListener('click', async()=>{
-  localStorage.removeItem("jwt")
-  const result = await fetch('http://localhost:3001/logOut')
-  await result.json()
-  window.location.replace('http://localhost:3001/login')
-})
+  const recordTag = document.getElementById("recordTag");
+  recordTag.setAttribute(
+    "href",
+    `/records?tok=Bearer ${localStorage.getItem("jwt")}`
+  );
 
+  document.getElementById("logout").addEventListener("click", async () => {
+    localStorage.removeItem("jwt");
+    const result = await fetch("http://localhost:3001/logOut");
+    await result.json();
+    window.location.replace("http://localhost:3001/login");
+  });
 </script>
-
-

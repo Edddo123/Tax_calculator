@@ -16,11 +16,11 @@ exports.loggedOut = exports.postLogin = exports.postSignUp = exports.getLogIn = 
 const users_1 = __importDefault(require("../models/users"));
 const authValidation_1 = require("../middleware/validation/authValidation");
 const getSignUp = (req, res, next) => {
-    res.render("signup", { myTok: exports.myTok });
+    res.render("signup");
 };
 exports.getSignUp = getSignUp;
 const getLogIn = (req, res, next) => {
-    res.render("login", { myTok: exports.myTok });
+    res.render("login");
 };
 exports.getLogIn = getLogIn;
 const postSignUp = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,14 +46,16 @@ const postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     const getToken = yield users_1.default.checkCredentials(value.loginEmail, value.loginPwd);
     if (getToken) {
-        exports.myTok = getToken;
-        return res.status(200).json({ token: exports.myTok, message: "Successful login" });
+        exports.myTok = getToken.token;
+        return res.status(200).json({
+            token: exports.myTok,
+            message: "Successful login",
+        });
     }
     res.json({ message: "Wrong credentials" });
 });
 exports.postLogin = postLogin;
 const loggedOut = (req, res, next) => {
-    exports.myTok = "";
-    res.json({ message: 'User successfully logged out' });
+    res.json({ message: "User successfully logged out" });
 };
 exports.loggedOut = loggedOut;

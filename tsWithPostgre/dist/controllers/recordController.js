@@ -16,14 +16,12 @@ exports.deleteRecord = exports.addIncome = exports.addCorpVAT = exports.addPersV
 const records_1 = __importDefault(require("../models/records"));
 const date_format_1 = require("../util/date-format");
 const recordValidation_1 = require("../middleware/validation/recordValidation");
-const authController_1 = require("./authController");
 const getRecords = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield records_1.default.getRecords(req.userId);
         let formattedData = date_format_1.formatData(data.rows);
         res.render("records", {
             data: formattedData,
-            myTok: authController_1.myTok
         });
     }
     catch (err) {
@@ -47,6 +45,7 @@ const addPersVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.addPersVAT = addPersVAT;
 const addCorpVAT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("here");
         const { error, value } = recordValidation_1.corpVATRecordSchema.validate(req.body);
         if (error)
             throw error;
@@ -79,6 +78,6 @@ const deleteRecord = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     if (error)
         throw error;
     records_1.default.deleteRecord(req.userId, value);
-    res.json({ message: 'Record deleted' });
+    res.json({ message: "Record deleted" });
 });
 exports.deleteRecord = deleteRecord;

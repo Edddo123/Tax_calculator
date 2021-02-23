@@ -1,19 +1,20 @@
+import db from "../util/db-setup";
 import { RequestHandler } from "express";
 import User from "../models/users";
 import {
   loginSchema,
   signupSchema,
 } from "../middleware/validation/authValidation";
-
+import jwt from "jsonwebtoken";
 export let myTok: string;
+// export let myRefreshTok: string;
 
 export const getSignUp: RequestHandler = (req, res, next) => {
-  res.render("signup", { myTok: myTok });
+  res.render("signup");
 };
 
 export const getLogIn: RequestHandler = (req, res, next) => {
-
-  res.render("login", { myTok: myTok });
+  res.render("login");
 };
 
 export const postSignUp: RequestHandler = async (req, res, next) => {
@@ -50,13 +51,34 @@ export const postLogin: RequestHandler = async (req, res, next) => {
     value.loginPwd
   );
   if (getToken) {
-    myTok = getToken;
-    return res.status(200).json({ token: myTok, message: "Successful login" });
+    myTok = getToken.token;
+    return res.status(200).json({
+      token: myTok,
+      message: "Successful login",
+    });
   }
   res.json({ message: "Wrong credentials" });
 };
 
 export const loggedOut: RequestHandler = (req, res, next) => {
-  myTok = "";
-  res.json({message:'User successfully logged out'})
-}
+  res.json({ message: "User successfully logged out" });
+};
+
+// export const refreshToken: RequestHandler = (req, res, next) => {
+//   const { refToken } = req.body;
+//   const myRefTok = db.query("SELECT * FROM refresh_token WHERE tokens=$1", [
+//     refToken,
+//   ]);
+//   if (!myRefTok) {
+//     throw new Error("Wrong refresh token");
+//   }
+//   const token = jwt.sign(
+//     {
+//       email: queryUser.rows[0].email,
+//       userId: queryUser.rows[0].user_id.toString(),
+//     },
+//     "secret",
+//     { expiresIn: "10s" }
+//   );
+//   res.json({ token });
+// };

@@ -1,32 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="/css/calculator.css">
+    <link rel="stylesheet" href="/css/calculator.css" />
     <%- include('./includes/navbarStyle.ejs') %>
-</head>
+  </head>
 
-<body>
- <header>
-    <%- include('./includes/navbar.ejs') %>
- </header>
- <main>
-  <div class="loginBox">
-   <h2>Access Your User</h2>
+  <body>
+    <header><%- include('./includes/navbar.ejs') %></header>
+    <main>
+      <div class="loginBox">
+        <h2>Access Your User</h2>
+
+        <form id="loginForm">
+          <p>E-mail Address</p>
+          <input
+            type="email"
+            name="email"
+            placeholder="e-mail"
+            id="loginEmail"
+          />
+          <p>Password</p>
+          <p>
+            <input
+              type="Password"
+              name="pword"
+              placeholder="Create Password"
+              id="loginPwd"
+            />
+            <input type="Submit" value="Login" id="loginBtn" />
+          </p>
+
+          <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        </form>
+      </div>
+    </main>
    
-  <form id="loginForm">
-   <p>E-mail Address</p>
-   	<input type="email" name="email" placeholder="e-mail" id="loginEmail">
-   <p>Password<p>
-	<input type="Password" name="pword" placeholder="Create Password" id="loginPwd">
-   	<input type="Submit" value="Login" id="loginBtn">
-  
-  <p>Don't have an account? <a href="/signup">Sign up</a></p>
-  </form>
-  </div>
- </main>
- <script defer src="/js/login.js"></script>
-</body>
+    <script defer src="/js/login.js"></script>
+  </body>
 </html>

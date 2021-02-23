@@ -3,9 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCorpVAT = exports.getPersonVAT = exports.postCalculator = exports.getCalculator = void 0;
 const taxCalculate_1 = require("../util/taxCalculate");
 const calcValidation_1 = require("../middleware/validation/calcValidation");
-const authController_1 = require("./authController");
 const getCalculator = (req, res, next) => {
-    res.render("calculator", { myTok: authController_1.myTok });
+    res.render("calculator");
 };
 exports.getCalculator = getCalculator;
 const postCalculator = (req, res, next) => {

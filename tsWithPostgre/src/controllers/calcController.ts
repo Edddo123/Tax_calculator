@@ -5,10 +5,9 @@ import {
   personVATSchema,
   corpVATSchema,
 } from "../middleware/validation/calcValidation";
-import { myTok } from "./authController";
 
 export const getCalculator: RequestHandler = (req, res, next) => {
-  res.render("calculator", { myTok: myTok });
+  res.render("calculator");
 };
 
 export const postCalculator: RequestHandler = (req, res, next) => {
