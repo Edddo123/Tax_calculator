@@ -5,7 +5,7 @@ import Feedback from "../models/feedback"
 export const getFeed: RequestHandler = async(req, res, next) => {
   try{
   const data = await Feedback.getFeedbacks()
-  res.render("feedback", { myTok: myTok , feedData: data.rows});
+  res.render("feedback", {feedData: data.rows});
 }catch(err) {
   console.log(err)
 }

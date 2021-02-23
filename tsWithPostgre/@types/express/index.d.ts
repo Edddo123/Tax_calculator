@@ -6,5 +6,7 @@ declare global{
         interface Request {
             userId: UserModel
         }
+        
     }
 }
+ 

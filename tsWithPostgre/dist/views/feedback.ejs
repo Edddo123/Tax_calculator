@@ -21,25 +21,10 @@
         <form id="feedbackForm">
           <p>What do you think about our application?</p>
           <textarea name="" id="content" cols="50" rows="3"></textarea>
-          <p>How would you rate us?</p>
-          <div id="rating">
-            <span class="fa fa-star checked"
-              ><input type="hidden" value="1" id="inp1"
-            /></span>
-            <span class="fa fa-star"
-              ><input type="hidden" value="2" id="inp2"
-            /></span>
-            <span class="fa fa-star"
-              ><input type="hidden" value="3" id="inp3"
-            /></span>
-            <span class="fa fa-star"
-              ><input type="hidden" value="4" id="inp4"
-            /></span>
-            <span class="fa fa-star"
-              ><input type="hidden" value="5" id="inp5"
-            /></span>
-            <input type="Submit" value="Login" id="loginBtn" />
-          </div>
+          
+           
+            <input type="Submit" value="Add Feedback" id="loginBtn" />
+        
         </form>
       </div>
       <div class="float-container">
@@ -48,22 +33,6 @@
           <p>Username: <%=feed.username%> at <%=feed.createdat%></p>
           
           <p><%=feed.content%></p>
-          <%if feed.rate%>
-          <P><span class="fa fa-star checked"
-            ><input type="hidden" value="1" id="inp1"
-          /></span>
-          <span class="fa fa-star"
-            ><input type="hidden" value="2" id="inp2"
-          /></span>
-          <span class="fa fa-star"
-            ><input type="hidden" value="3" id="inp3"
-          /></span>
-          <span class="fa fa-star"
-            ><input type="hidden" value="4" id="inp4"
-          /></span>
-          <span class="fa fa-star"
-            ><input type="hidden" value="5" id="inp5"
-          /></span></P>
           <button
             type="submit"
             class="deleteButton"
