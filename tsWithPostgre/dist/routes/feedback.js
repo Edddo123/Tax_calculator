@@ -9,4 +9,5 @@ const isAuth_1 = require("../middleware/isAuth");
 const router = express_1.default.Router();
 router.get("/feedback", feedController_1.getFeed);
 router.post("/addFeedback", isAuth_1.isAuth, feedController_1.addFeed);
+router.delete("/deleteFeeback", isAuth_1.isAuth, feedController_1.deleteFeed);
 exports.default = router;

@@ -8,28 +8,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const stars = document.getElementsByClassName('fa');
-const in1 = document.getElementById('inp1');
-const in2 = document.getElementById('inp2');
-const in3 = document.getElementById('inp3');
-const in4 = document.getElementById('inp4');
-const in5 = document.getElementById('inp5');
-const feedbackForm = document.getElementById('feedbackForm');
-feedbackForm.addEventListener('submit', submitFeedback);
+const feedbackForm = document.getElementById("feedbackForm");
+feedbackForm.addEventListener("submit", submitFeedback);
 function submitFeedback(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
-        const content = document.getElementById('content');
+        const content = document.getElementById("content");
         const result = yield fetch("http://localhost:3001/addFeedback", {
-            method: 'POST',
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("jwt")
+                Authorization: "Bearer " + localStorage.getItem("jwt"),
             },
             body: JSON.stringify({
                 content: content.value,
-            })
+            }),
         });
         const data = yield result.json();
     });
 }
+const deleteFeed = (btn) => __awaiter(void 0, void 0, void 0, function* () {
+    const feedId = btn.parentNode.querySelector("[name=feedId]").value;
+    const feedElement = btn.closest("div");
+    try {
+        const result = yield fetch("http://localhost:3001/deleteFeeback?id=" + feedId, {
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwt"),
+            },
+        });
+        const data = yield result.json();
+        if (data.deletedPostCount) {
+            feedElement.remove();
+        }
+    }
+    catch (error) {
+        console.error(error, "here?");
+    }
+});

@@ -33,10 +33,11 @@
           <p>Username: <%=feed.username%> at <%=feed.createdat%></p>
           
           <p><%=feed.content%></p>
+          <input type="hidden" value="<%=feed.feedback_id%>" name="feedId">
           <button
             type="submit"
             class="deleteButton"
-            onclick="deleteRecord(this)"
+            onclick="deleteFeed(this)"
           >
             Delete Feedback
           </button>
