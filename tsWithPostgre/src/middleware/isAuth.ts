@@ -17,6 +17,7 @@ export const isAuth: RequestHandler = (req, res, next) => {
     }
     //my property doesnt exist on req object interface so we need to add it
     req.userId = decodedToken.userId;
+    req.username = decodedToken.username;
     next();
   } catch (err) {
     console.error(err);

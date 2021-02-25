@@ -51,9 +51,8 @@ export const postLogin: RequestHandler = async (req, res, next) => {
     value.loginPwd
   );
   if (getToken) {
-    myTok = getToken.token;
     return res.status(200).json({
-      token: myTok,
+      token: getToken.token,
       message: "Successful login",
     });
   }

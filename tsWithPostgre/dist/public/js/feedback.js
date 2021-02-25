@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const feedbackForm = document.getElementById("feedbackForm");
 feedbackForm.addEventListener("submit", submitFeedback);
+let socket = io();
 function submitFeedback(e) {
     return __awaiter(this, void 0, void 0, function* () {
         e.preventDefault();
@@ -25,6 +26,21 @@ function submitFeedback(e) {
             }),
         });
         const data = yield result.json();
+        const div = document.createElement("div");
+        div.setAttribute("class", "content-box red float-child");
+        div.innerHTML = `
+  <p>Username: ${data.username} at ${Date.now()}</p>
+          <p>${content.value}</p>
+          <input type="hidden" value="${data.feedId.rows[0].feedback_id}" name="feedId">
+          <button
+            type="submit"
+            class="deleteButton"
+            onclick="deleteFeed(this)"
+          >
+            Delete Feedback
+          </button>
+  `;
+        document.getElementsByClassName("float-container")[0].appendChild(div);
     });
 }
 const deleteFeed = (btn) => __awaiter(void 0, void 0, void 0, function* () {
@@ -41,6 +57,9 @@ const deleteFeed = (btn) => __awaiter(void 0, void 0, void 0, function* () {
         if (data.deletedPostCount) {
             feedElement.remove();
         }
+        socket.on("delete", (message) => {
+            console.log(message);
+        });
     }
     catch (error) {
         console.error(error, "here?");

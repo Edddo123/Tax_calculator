@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteFeed = exports.addFeed = exports.getFeed = void 0;
 const feedback_1 = __importDefault(require("../models/feedback"));
+let io = require("../socket").getIO();
 const getFeed = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield feedback_1.default.getFeedbacks();
@@ -28,8 +29,10 @@ const addFeed = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { content, rating } = req.body;
         const feed = new feedback_1.default(content, req.userId, rating);
-        yield feed.addFeedback();
-        res.json({ message: "feed added" });
+        const feedId = yield feed.addFeedback();
+        return res
+            .status(201)
+            .json({ message: "feed added", username: req.username, feedId });
     }
     catch (err) {
         console.log(err);
@@ -45,7 +48,11 @@ const deleteFeed = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
                 .status(409)
                 .json({ message: "You can only delete feeds you have created" });
         }
-        return res.status(200).json({ message: "Successfully deleted post", deletedPostCount: result.rowCount });
+        io.emit('deleted', { message: "Post successfully deleted" });
+        return res.status(200).json({
+            message: "Successfully deleted post",
+            deletedPostCount: result.rowCount,
+        });
     }
     catch (err) {
         return res

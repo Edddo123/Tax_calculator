@@ -11,7 +11,7 @@ class Feedback {
         this.rating = rating;
     }
     addFeedback() {
-        return db_setup_1.default.query("INSERT INTO feedback(content,user_id, rating) VALUES ($1, $2, $3)", [this.content, this.userId, this.rating]);
+        return db_setup_1.default.query("INSERT INTO feedback(content,user_id, rating) VALUES ($1, $2, $3) RETURNING feedback_id", [this.content, this.userId, this.rating]);
     }
     static getFeedbacks() {
         return db_setup_1.default.query(`SELECT a.feedback_id, a.content, a.rating, a.createdat, b.username FROM feedback as a JOIN "user" as b USING(user_id)`);

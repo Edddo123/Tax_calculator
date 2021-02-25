@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { myTok } from "./authController";
 import Feedback from "../models/feedback";
+let io = require("../socket").getIO();
 
 export const getFeed: RequestHandler = async (req, res, next) => {
   try {
@@ -15,8 +16,11 @@ export const addFeed: RequestHandler = async (req, res, next) => {
   try {
     const { content, rating } = req.body;
     const feed = new Feedback(content, req.userId, rating);
-    await feed.addFeedback();
-    res.json({ message: "feed added" });
+    const feedId = await feed.addFeedback();
+
+    return res
+      .status(201)
+      .json({ message: "feed added", username: req.username, feedId });
   } catch (err) {
     console.log(err);
   }
@@ -31,10 +35,14 @@ export const deleteFeed: RequestHandler = async (req, res, next) => {
         .status(409)
         .json({ message: "You can only delete feeds you have created" });
     }
-    return res.status(200).json({ message: "Successfully deleted post" , deletedPostCount: result.rowCount});
+    io.emit('deleted', {message: "Post successfully deleted"})
+    return res.status(200).json({
+      message: "Successfully deleted post",
+      deletedPostCount: result.rowCount,
+    });
   } catch (err) {
     return res
       .status(500)
-      .json({ message: "Feed could not be deleted, try again later"});
+      .json({ message: "Feed could not be deleted, try again later" });
   }
 };

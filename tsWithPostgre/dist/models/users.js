@@ -27,17 +27,17 @@ class User {
     addUser() {
         return __awaiter(this, void 0, void 0, function* () {
             const hashedPwd = yield bcrypt_1.default.hash(this.pword, 10);
-            return db_setup_1.default.query(`INSERT INTO "user"(first_name, last_name, email, password, username) VALUES($1, $2, $3, $4, $5)`, [this.firstName, this.lastName, this.email, hashedPwd, this.username]);
+            return db_setup_1.default.query(`INSERT INTO "user"(first_name, last_name, email, password) VALUES($1, $2, $3, $4, $5)`, [this.firstName, this.lastName, this.email, hashedPwd, this.username]);
         });
     }
     static checkCredentials(email, pwd) {
         return __awaiter(this, void 0, void 0, function* () {
-            const queryUser = yield db_setup_1.default.query(`SELECT user_id,email, password FROM "user" WHERE email = $1`, [email]);
+            const queryUser = yield db_setup_1.default.query(`SELECT user_id,email, password, username FROM "user" WHERE email = $1`, [email]);
             if (queryUser.rows.length > 0) {
                 const checkResult = yield bcrypt_1.default.compare(pwd, queryUser.rows[0].password);
                 if (checkResult) {
                     const token = jsonwebtoken_1.default.sign({
-                        email: queryUser.rows[0].email,
+                        username: queryUser.rows[0].username,
                         userId: queryUser.rows[0].user_id.toString(),
                     }, "secret");
                     return { token };

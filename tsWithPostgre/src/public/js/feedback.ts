@@ -2,6 +2,8 @@ const feedbackForm = document.getElementById("feedbackForm")!;
 
 feedbackForm.addEventListener("submit", submitFeedback);
 
+let socket = io();
+
 async function submitFeedback(e: Event) {
   e.preventDefault();
   const content = document.getElementById("content")! as HTMLInputElement;
@@ -18,6 +20,23 @@ async function submitFeedback(e: Event) {
   });
 
   const data = await result.json();
+  const div = document.createElement("div");
+  div.setAttribute("class", "content-box red float-child");
+  div.innerHTML = `
+  <p>Username: ${data.username} at ${Date.now()}</p>
+          <p>${content.value}</p>
+          <input type="hidden" value="${
+            data.feedId.rows[0].feedback_id
+          }" name="feedId">
+          <button
+            type="submit"
+            class="deleteButton"
+            onclick="deleteFeed(this)"
+          >
+            Delete Feedback
+          </button>
+  `;
+  document.getElementsByClassName("float-container")[0].appendChild(div);
 }
 
 const deleteFeed = async (btn: any) => {
@@ -37,6 +56,9 @@ const deleteFeed = async (btn: any) => {
     if (data.deletedPostCount) {
       feedElement.remove();
     }
+    socket.on("delete", (message:any) => {
+      console.log(message);
+    });
   } catch (error) {
     console.error(error, "here?");
   }

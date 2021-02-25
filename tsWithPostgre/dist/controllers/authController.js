@@ -46,9 +46,8 @@ const postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     const getToken = yield users_1.default.checkCredentials(value.loginEmail, value.loginPwd);
     if (getToken) {
-        exports.myTok = getToken.token;
         return res.status(200).json({
-            token: exports.myTok,
+            token: getToken.token,
             message: "Successful login",
         });
     }

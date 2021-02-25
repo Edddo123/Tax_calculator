@@ -9,7 +9,7 @@ export default class Feedback {
 
   addFeedback() {
     return db.query(
-      "INSERT INTO feedback(content,user_id, rating) VALUES ($1, $2, $3)",
+      "INSERT INTO feedback(content,user_id, rating) VALUES ($1, $2, $3) RETURNING feedback_id",
       [this.content, this.userId, this.rating]
     );
   }
@@ -17,7 +17,7 @@ export default class Feedback {
   static getFeedbacks() {
     return db.query(
       `SELECT a.feedback_id, a.content, a.rating, a.createdat, b.username FROM feedback as a JOIN "user" as b USING(user_id)`
-    ); //will be modified after adding user
+    ); 
   }
 
   static deleteFeedback(feedId: unknown, userId: string) {

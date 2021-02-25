@@ -18,6 +18,7 @@ const isAuth = (req, res, next) => {
             return res.status(401).json({ message: "Wrong token" });
         }
         req.userId = decodedToken.userId;
+        req.username = decodedToken.username;
         next();
     }
     catch (err) {
