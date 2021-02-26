@@ -1,11 +1,10 @@
 import { Server } from "http";
-import { Socket } from "socket.io";
 
 let io: any;
 
-module.exports = {
+module.exports =  {
   init: (httpServer: Server) => {
-    io = Socket(httpServer);
+    io = require('socket.io')(httpServer);
     return io;
   },
 

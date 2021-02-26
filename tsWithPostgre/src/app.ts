@@ -8,7 +8,7 @@ import recordRoutes from "./routes/record";
 import authRoutes from "./routes/auth";
 import calcRoutes from "./routes/calculator";
 import feedRoutes from "./routes/feedback";
-import socket from "./socket";
+const socket = require("./socket");
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", "dist/views");
@@ -29,7 +29,7 @@ db.connect()
   .then(() => {
     console.log("connected to database");
     const server = app.listen(3001);
-    let io = socket(server);
+    let io = socket.init(server);
   })
   .catch((err) => {
     console.log(err, "system crashed");

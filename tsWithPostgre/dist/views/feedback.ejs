@@ -33,7 +33,7 @@
           <p>Username: <%=feed.username%> at <%=feed.createdat%></p>
           
           <p><%=feed.content%></p>
-          <input type="hidden" value="<%=feed.feedback_id%>" name="feedId">
+          <input type="hidden" value="<%=feed.feedback_id%>" name="feedId" id="<%=feed.feedback_id%>">
           <button
             type="submit"
             class="deleteButton"

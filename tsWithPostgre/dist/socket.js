@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const socket_io_1 = require("socket.io");
 let io;
 module.exports = {
     init: (httpServer) => {
-        io = socket_io_1.Socket(httpServer);
+        io = require('socket.io')(httpServer);
         return io;
     },
     getIO: () => {

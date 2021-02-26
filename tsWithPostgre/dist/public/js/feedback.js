@@ -26,21 +26,6 @@ function submitFeedback(e) {
             }),
         });
         const data = yield result.json();
-        const div = document.createElement("div");
-        div.setAttribute("class", "content-box red float-child");
-        div.innerHTML = `
-  <p>Username: ${data.username} at ${Date.now()}</p>
-          <p>${content.value}</p>
-          <input type="hidden" value="${data.feedId.rows[0].feedback_id}" name="feedId">
-          <button
-            type="submit"
-            class="deleteButton"
-            onclick="deleteFeed(this)"
-          >
-            Delete Feedback
-          </button>
-  `;
-        document.getElementsByClassName("float-container")[0].appendChild(div);
     });
 }
 const deleteFeed = (btn) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,15 +38,31 @@ const deleteFeed = (btn) => __awaiter(void 0, void 0, void 0, function* () {
                 Authorization: "Bearer " + localStorage.getItem("jwt"),
             },
         });
-        const data = yield result.json();
-        if (data.deletedPostCount) {
-            feedElement.remove();
-        }
-        socket.on("delete", (message) => {
-            console.log(message);
-        });
+        yield result.json();
     }
     catch (error) {
         console.error(error, "here?");
     }
+});
+socket.on("deleted", (message) => {
+    const feed = document.getElementById(message.feedId);
+    const feedElement = feed === null || feed === void 0 ? void 0 : feed.closest("div");
+    feedElement === null || feedElement === void 0 ? void 0 : feedElement.remove();
+});
+socket.on("added", (message) => {
+    const div = document.createElement("div");
+    div.setAttribute("class", "content-box red float-child");
+    div.innerHTML = `
+  <p>Username: ${message.username} at ${Date.now()}</p>
+          <p>${message.content}</p>
+          <input type="hidden" value="${message.feedId.rows[0].feedback_id}" name="feedId" id="${message.feedId.rows[0].feedback_id}">
+          <button
+            type="submit"
+            class="deleteButton"
+            onclick="deleteFeed(this)"
+          >
+            Delete Feedback
+          </button>
+  `;
+    document.getElementsByClassName("float-container")[0].appendChild(div);
 });

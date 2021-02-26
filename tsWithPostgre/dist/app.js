@@ -12,7 +12,7 @@ const record_1 = __importDefault(require("./routes/record"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const calculator_1 = __importDefault(require("./routes/calculator"));
 const feedback_1 = __importDefault(require("./routes/feedback"));
-const socket_1 = __importDefault(require("./socket"));
+const socket = require("./socket");
 const app = express_1.default();
 app.set("view engine", "ejs");
 app.set("views", "dist/views");
@@ -30,7 +30,7 @@ db_setup_1.default.connect()
     .then(() => {
     console.log("connected to database");
     const server = app.listen(3001);
-    let io = socket_1.default(server);
+    let io = socket.init(server);
 })
     .catch((err) => {
     console.log(err, "system crashed");
