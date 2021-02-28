@@ -8,6 +8,8 @@ import recordRoutes from "./routes/record";
 import authRoutes from "./routes/auth";
 import calcRoutes from "./routes/calculator";
 import feedRoutes from "./routes/feedback";
+import profileRoutes from "./routes/profile";
+
 const socket = require("./socket");
 const app = express();
 app.set("view engine", "ejs");
@@ -24,6 +26,7 @@ app.use(authRoutes);
 app.use(recordRoutes);
 app.use(calcRoutes);
 app.use(feedRoutes);
+app.use(profileRoutes);
 
 db.connect()
   .then(() => {

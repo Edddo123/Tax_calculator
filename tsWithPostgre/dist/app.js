@@ -12,6 +12,7 @@ const record_1 = __importDefault(require("./routes/record"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const calculator_1 = __importDefault(require("./routes/calculator"));
 const feedback_1 = __importDefault(require("./routes/feedback"));
+const profile_1 = __importDefault(require("./routes/profile"));
 const socket = require("./socket");
 const app = express_1.default();
 app.set("view engine", "ejs");
@@ -26,6 +27,7 @@ app.use(auth_1.default);
 app.use(record_1.default);
 app.use(calculator_1.default);
 app.use(feedback_1.default);
+app.use(profile_1.default);
 db_setup_1.default.connect()
     .then(() => {
     console.log("connected to database");

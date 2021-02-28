@@ -16,13 +16,14 @@ const db_setup_1 = __importDefault(require("../util/db-setup"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class User {
-    constructor(firstName, lastName, username, email, pword, confirmPword) {
+    constructor(firstName, lastName, username, email, pword, confirmPword, avatar) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.pword = pword;
         this.confirmPword = confirmPword;
+        this.avatar = avatar;
     }
     addUser() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,6 +45,14 @@ class User {
                 }
             }
             return false;
+        });
+    }
+    static addAvatar(userId, imageUrl = "") {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield db_setup_1.default.query('UPDATE "user" SET image_url=$1 WHERE user_id=$2', [
+                imageUrl,
+                userId,
+            ]);
         });
     }
 }

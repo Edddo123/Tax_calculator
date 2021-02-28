@@ -9,7 +9,8 @@ export default class User {
     private username: string,
     private email: string,
     private pword: string,
-    private confirmPword: string
+    private confirmPword: string,
+    private avatar: string
   ) {}
   async addUser() {
     //table name in double quotes as user is reserved name
@@ -24,7 +25,7 @@ export default class User {
       `SELECT user_id,email, password, username FROM "user" WHERE email = $1`,
       [email]
     );
-    if (queryUser.rows.length > 0) { 
+    if (queryUser.rows.length > 0) {
       const checkResult = await bcrypt.compare(pwd, queryUser.rows[0].password);
       if (checkResult) {
         const token = jwt.sign(
@@ -32,13 +33,18 @@ export default class User {
             username: queryUser.rows[0].username,
             userId: queryUser.rows[0].user_id.toString(),
           },
-          "secret",
-          
+          "secret"
         );
-       
+
         return { token };
       }
     }
     return false;
+  }
+  static async addAvatar( userId: string, imageUrl: string = "") {
+    await db.query('UPDATE "user" SET image_url=$1 WHERE user_id=$2', [
+      imageUrl,
+      userId,
+    ]);
   }
 }
